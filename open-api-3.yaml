@@ -1,0 +1,137 @@
+openapi: 3.1.0
+
+info:
+  title: TP-Link Smart Home HS110 Plug API
+  version: 0.0.1
+  contact:
+    name: Lars Michaelis
+    email: mail@larmic.de
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+
+paths:
+  /api/{plugIp}:
+    get:
+      summary: Returns a smart plug general info by ip.
+      parameters:
+        - name: plugIp
+          in: path
+          required: true
+          description: ip address of plug (i.e. 10.0.0.100)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Smart plug
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/System"
+        '404':
+          description: Smart plug not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProtocolError"
+  /api/{plugIp}/consumption:
+    get:
+      summary: Returns a smart plug consumption info by ip.
+      parameters:
+        - name: plugIp
+          in: path
+          required: true
+          description: ip address of plug (i.e. 10.0.0.100)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Smart plug consumption info
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Consumption"
+        '404':
+          description: Smart plug not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProtocolError"
+
+
+components:
+  schemas:
+    System:
+      required:
+        - ip
+        - port
+        - alias
+        - model
+        - mac
+        - softwareVersion
+        - hardwareVersion
+        - led
+        - switch
+      properties:
+        ip:
+          type: string
+          description: Smart plug ip addres (i.e. 10.0.0.100).
+        port:
+          type: integer
+          description: Smart plug port (i.e. 9999).
+        name:
+          type: string
+          description: Smart plug name or alias.
+        icon:
+          type: string
+          description: Smart plug icon hash.
+        model:
+          type: string
+          description: Smart plug model.
+        mac:
+          type: string
+          description: Smart plug mac address.
+        softwareVersion:
+          type: string
+          description: Smart plug software version.
+        hardwareVersion:
+          type: string
+          description: Smart plug hardware version.
+        led:
+          type: string
+          description: Smart plug led state.
+          enum:
+            - on
+            - off
+        power:
+          type: string
+          description: Smart plug power switch state.
+          enum:
+            - on
+            - off
+    Consumption:
+      required:
+        - current_mw
+        - today_wh
+        - total_wh
+      properties:
+        current_mw:
+          type: integer
+          description: Actual consumption in milli watt
+        today_wh:
+          type: integer
+          description: Consumption of the day in watt per hours
+        total_wh:
+          type: integer
+          description: Consumption since switch on device in watt per hours
+    ProtocolError:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          description: HTTP code.
+        message:
+          type: string
+          description: Error message.
