@@ -3,8 +3,8 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Go build](https://github.com/larmic/sonnenBatterie-api/workflows/Go%20build/badge.svg)
 ![Docker build and push](https://github.com/larmic/sonnenBatterie-api/workflows/Docker%20build%20and%20push/badge.svg)
-[![Docker hub image](https://img.shields.io/docker/image-size/larmic/sonnenBatterie-api?label=dockerhub)](https://hub.docker.com/repository/docker/larmic/sonnenBatterie-api)
-![Docker Image Version (latest by date)](https://img.shields.io/docker/v/larmic/sonnenBatterie-api)
+[![Docker hub image](https://img.shields.io/docker/image-size/larmic/sonnen-batterie-api?label=dockerhub)](https://hub.docker.com/repository/docker/larmic/sonnen-batterie-api)
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/larmic/sonnen-batterie-api)
 
 TODO: 
 * implement this tool
