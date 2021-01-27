@@ -1,4 +1,4 @@
-module sonnenBatterie-api
+module sonnen-batterie-api
 
 go 1.15
 

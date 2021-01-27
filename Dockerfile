@@ -9,7 +9,7 @@ RUN go version
 WORKDIR /go/src/larmic/
 
 COPY main.go go.mod go.sum /go/src/larmic/
-#COPY api /go/src/larmic/api
+COPY api /go/src/larmic/api
 
 RUN go mod download
 

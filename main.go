@@ -3,12 +3,21 @@ package main
 import (
 	"log"
 	"net/http"
+	"sonnen-batterie-api/api"
 
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	log.Println("Hello sonnenBatterie-api!")
+
+	tokens, err := api.ReadAuthenticationTokens()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(tokens)
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/hello", HelloHandler).Methods("GET")
