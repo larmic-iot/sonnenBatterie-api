@@ -10,6 +10,7 @@ WORKDIR /go/src/larmic/
 
 COPY main.go go.mod go.sum /go/src/larmic/
 COPY api /go/src/larmic/api
+COPY open-api-3.yaml /go/src/larmic
 
 RUN go mod download
 
@@ -20,16 +21,39 @@ RUN go test -v ./...
 # GOARCH=amd64    -> because, hmm, everthing works fine with 64 bit :)
 # -a              -> force rebuilding of packages that are already up-to-date.
 # -o app          -> force to build an executable app file (instead of default https://golang.org/cmd/go/#hdr-Compile_packages_and_dependencies)
-ARG CGO_ENABLED=0
-ARG GOARCH=amd64
-ARG GOARM=7
-RUN env CGO_ENABLED=${CGO_ENABLED} GOARCH=${GOARCH} GOARM=${GOARM} go build -a -o main .
+
+ARG BUILDPLATFORM
+ARG TARGETPLATFORM
+ARG VERSION
+
+RUN echo "I am running on $BUILDPLATFORM, building $VERSION for $TARGETPLATFORM"
+
+# set version in open-api-3.yaml
+RUN sed -i "s/\${VERSION}/$VERSION/" open-api-3.yaml
+
+RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ] ; then \
+        echo "I am building linux/arm/v7 with CGO_ENABLED=0 GOARCH=arm GOARM=7" ; \
+        env CGO_ENABLED=0 GOARCH=arm GOARM=7 go build -a -o main . ; \
+        echo "Build done" ; \
+    fi
+
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then \
+        echo "I am building linux/arm64 with CGO_ENABLED=0 GOARCH=arm64 GOARM=7" ; \
+        env CGO_ENABLED=0 GOARCH=arm64 GOARM=7 go build -a -o main . ; \
+        echo "Build done" ; \
+    fi
+
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
+        echo "I am building linux/amd64 with CGO_ENABLED=0 GOARCH=amd64" ; \
+        env CGO_ENABLED=0 GOARCH=amd64 go build -a -o main . ; \
+        echo "Build done" ; \
+    fi
 
 # Step 2: create minimal executable image (less than 10 MB)
 FROM scratch
 WORKDIR /root/
 COPY --from=builder /go/src/larmic/main .
-COPY open-api-3.yaml .
+COPY --from=builder /go/src/larmic/open-api-3.yaml .
 
 EXPOSE 8080
 ENTRYPOINT ["./main"]

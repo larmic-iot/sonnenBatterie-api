@@ -2,7 +2,7 @@ openapi: 3.1.0
 
 info:
   title: TP-Link Smart Home HS110 Plug API
-  version: 0.0.1
+  version: ${VERSION}
   contact:
     name: Lars Michaelis
     email: mail@larmic.de

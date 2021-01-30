@@ -15,25 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Go 1.15.x
-        uses: actions/setup-go@v2
-        with:
-          go-version: ^1.15
-
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
 
       - name: Set up version
         run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
-
-      - name: Go get dependencies
-        run: go mod download
-
-      - name: Go Test
-        run: go test -v ./...
-
-      - name: Go Build
-        run: CGO_ENABLED=0 GOOS=linux go build -v ./...
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -41,45 +27,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build amd64 image
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: prepare buildx
         run: |
-          DOCKER_BUILDKIT=1 docker build --build-arg=CGO_ENABLED=$CGO_ENABLED --build-arg=GOARCH=$GOARCH --tag $IMAGE_NAME:amd64 .
-          docker push $IMAGE_NAME:amd64
-        env:
-          CGO_ENABLED: 0
-          GOARCH: amd64
+          # Use docker-container driver to allow useful features (push/multi-platform)
+          docker buildx create --driver docker-container --use
+          docker buildx inspect --bootstrap
 
-      - name: Build arm32v7 image
+      - name: build image
         run: |
-          DOCKER_BUILDKIT=1 docker build --build-arg=CGO_ENABLED=$CGO_ENABLED --build-arg=GOARCH=$GOARCH --build-arg=GOARM=$GOARM --tag $IMAGE_NAME:arm32v7 .
-          docker push $IMAGE_NAME:arm32v7
-        env:
-          CGO_ENABLED: 0
-          GOARCH: arm
-          GOARM: 7
-
-      - name: Build arm64v7 image
-        run: |
-          DOCKER_BUILDKIT=1 docker build --build-arg=CGO_ENABLED=$CGO_ENABLED --build-arg=GOARCH=$GOARCH --build-arg=GOARM=$GOARM --tag $IMAGE_NAME:arm64v7 .
-          docker push $IMAGE_NAME:arm64v7
-        env:
-          CGO_ENABLED: 0
-          GOARCH: arm64
-          GOARM: 7
-
-      - name: List Docker images
-        run: docker images
-
-      - name: Build docker manifest
-        run: |
-          docker manifest create $IMAGE_NAME:latest --amend $IMAGE_NAME:amd64 --amend $IMAGE_NAME:arm32v7 --amend $IMAGE_NAME:arm64v7
-          docker manifest annotate $IMAGE_NAME:latest $IMAGE_NAME:arm32v7 --os linux --arch arm
-          docker manifest annotate $IMAGE_NAME:latest $IMAGE_NAME:arm64v7 --os linux --arch arm64
-          docker manifest push $IMAGE_NAME:latest
-
-          docker manifest create $IMAGE_NAME:$VERSION --amend $IMAGE_NAME:amd64 --amend $IMAGE_NAME:arm32v7 --amend $IMAGE_NAME:arm64v7
-          docker manifest annotate $IMAGE_NAME:$VERSION $IMAGE_NAME:arm32v7 --os linux --arch arm
-          docker manifest annotate $IMAGE_NAME:$VERSION $IMAGE_NAME:arm64v7 --os linux --arch arm64
-          docker manifest push $IMAGE_NAME:$VERSION
-        env:
-          DOCKER_CLI_EXPERIMENTAL: enabled
+          update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
+          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm --build-arg VERSION=$VERSION --pull --tag "$IMAGE_NAME:$VERSION" --tag "$IMAGE_NAME:latest" . --push
