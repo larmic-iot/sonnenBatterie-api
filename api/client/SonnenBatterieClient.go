@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 const (
@@ -13,24 +14,26 @@ const (
 )
 
 type Client struct {
-	Url    string
-	ApiKey string
+	Url     string
+	ApiKey  string
+	Timeout time.Duration
 }
 
 type LatestData struct {
-	ConsumptionInWatt json.Number `json:"Consumption_W"`
-	ProductionInWatt  json.Number `json:"Production_W"`
+	ConsumptionInWatt int `json:"Consumption_W"`
+	ProductionInWatt  int `json:"Production_W"`
 }
 
-func NewClient(baseUrl string, apiKey string) *Client {
+func NewClient(baseUrl string, apiKey string, timeout time.Duration) *Client {
 	return &Client{
-		Url:    baseUrl + contextPath,
-		ApiKey: apiKey,
+		Url:     baseUrl + contextPath,
+		ApiKey:  apiKey,
+		Timeout: timeout,
 	}
 }
 
 func (c *Client) getLatestData() (LatestData, error) {
-	client := &http.Client{}
+	client := &http.Client{Timeout: c.Timeout}
 
 	req, err := http.NewRequest("GET", c.Url, nil)
 
@@ -48,7 +51,7 @@ func (c *Client) getLatestData() (LatestData, error) {
 	}
 
 	if resp.StatusCode != 200 {
-		return LatestData{}, errors.New(fmt.Sprintf("Status code is %d", resp.StatusCode))
+		return LatestData{}, errors.New(fmt.Sprintf("status code is %d", resp.StatusCode))
 	}
 
 	defer resp.Body.Close()
