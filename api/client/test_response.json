@@ -1,0 +1,99 @@
+{
+  "Consumption_W": 749,
+  "FullChargeCapacity": 48828,
+  "GridFeedIn_W": 0,
+  "Pac_total_W": -2,
+  "Production_W": 211,
+  "RSOC": 9,
+  "SetPoint_W": 0,
+  "Timestamp": "2021-01-31 12:52:25",
+  "USOC": 0,
+  "UTC_Offet": 1,
+  "ic_status": {
+    "DC Shutdown Reason": {
+      "Critical BMS Alarm": false,
+      "Error condition in BMS initialization": false,
+      "HW_Shutdown": false,
+      "HardWire Over Voltage": false,
+      "HardWired Dry Signal A": false,
+      "HardWired Under Voltage": false,
+      "Holding Circuit Error": false,
+      "Initialization Timeout": false,
+      "Initialization of AC contactor failed": false,
+      "Initialization of BMS hardware failed": false,
+      "Initialization of DC contactor failed": false,
+      "Initialization of Inverter failed": false,
+      "Invalid or no SystemType was set": false,
+      "Inverter Over Temperature": false,
+      "Inverter Under Voltage": false,
+      "Manual shutdown by user": false,
+      "Minimum rSOC of System reached": false,
+      "No Setpoint received by HC": false,
+      "Shutdown Timer started": false,
+      "System Validation failed": false,
+      "Voltage Monitor Changed": false
+    },
+    "Eclipse Led": {
+      "Pulsing Green": false,
+      "Pulsing Orange": false,
+      "Pulsing White": true,
+      "Solid Red": false
+    },
+    "Flat Status": {
+      "Auto Mode": true,
+      "Error": false,
+      "Full Charge Power": false,
+      "Full Discharge Power": false,
+      "Not Connected": true,
+      "Spare 1": false,
+      "Spare 2": false,
+      "Spare 3": false,
+      "Timeout": false
+    },
+    "MISC Status Bits": {
+      "Discharge not allowed": false,
+      "F1 open": false,
+      "Min System SOC": false,
+      "Min User SOC": true
+    },
+    "Microgrid Status": {
+      "Continious Power Violation": false,
+      "Discharge Current Limit Violation": false,
+      "Low Temperature": false,
+      "Max System SOC": false,
+      "Max User SOC": false,
+      "Microgrid Enabled": false,
+      "Min System SOC": false,
+      "Min User SOC": false,
+      "Over Charge Current": false,
+      "Over Discharge Current": false,
+      "Peak Power Violation": false,
+      "Protect is activated": false,
+      "Transition to Ongrid Pending": false
+    },
+    "Setpoint Priority": {
+      "BMS": false,
+      "Energy Manager": true,
+      "Flat": false,
+      "Full Charge Request": false,
+      "Inverter": false,
+      "Min User SOC": true,
+      "Trickle Charge": false
+    },
+    "System Validation": {
+      "Country Code Set status flag 1": false,
+      "Country Code Set status flag 2": false,
+      "Self test Error DC Wiring": false,
+      "Self test Postponed": false,
+      "Self test Precondition not met": false,
+      "Self test Running": false,
+      "Self test successful finished": false
+    },
+    "nrbatterymodules": 2,
+    "secondssincefullcharge": 166420,
+    "statebms": "ready",
+    "statecorecontrolmodule": "ongrid",
+    "stateinverter": "running",
+    "timestamp": "Sun Jan 31 12:52:22 2021"
+  }
+}
