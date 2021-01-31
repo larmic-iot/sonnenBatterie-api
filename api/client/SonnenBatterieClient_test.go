@@ -22,7 +22,7 @@ func TestClient_getLatestData(t *testing.T) {
 
 	defer server.Close()
 
-	client := NewClient(server.URL, apiKey, 0)
+	client := NewClient(server.URL, apiKey)
 	latestData, err := client.getLatestData()
 
 	equals(t, nil, err)
@@ -35,7 +35,7 @@ func TestClient_getLatestData_Api_Key_Not_Matching(t *testing.T) {
 
 	defer server.Close()
 
-	client := NewClient(server.URL, "not-matching", 0)
+	client := NewClient(server.URL, "not-matching")
 	latestData, err := client.getLatestData()
 
 	equals(t, errors.New("status code is 401"), err)
@@ -43,7 +43,7 @@ func TestClient_getLatestData_Api_Key_Not_Matching(t *testing.T) {
 }
 
 func TestClient_getLatestData_SonnenBatterie_not_found(t *testing.T) {
-	client := NewClient("http://10.10.10.10:80", apiKey, 10)
+	client := NewClient("http://10.10.10.10:80", apiKey)
 	latestData, err := client.getLatestData()
 
 	timeoutError := mapToTimeoutError(err)

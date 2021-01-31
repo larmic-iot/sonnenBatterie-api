@@ -14,9 +14,8 @@ const (
 )
 
 type Client struct {
-	Url     string
-	ApiKey  string
-	Timeout time.Duration
+	Url    string
+	apiKey string
 }
 
 type LatestData struct {
@@ -24,16 +23,15 @@ type LatestData struct {
 	ProductionInWatt  int `json:"Production_W"`
 }
 
-func NewClient(baseUrl string, apiKey string, timeout time.Duration) *Client {
+func NewClient(baseUrl string, apiKey string) *Client {
 	return &Client{
-		Url:     baseUrl + contextPath,
-		ApiKey:  apiKey,
-		Timeout: timeout,
+		Url:    baseUrl + contextPath,
+		apiKey: apiKey,
 	}
 }
 
 func (c *Client) getLatestData() (LatestData, error) {
-	client := &http.Client{Timeout: c.Timeout}
+	client := &http.Client{Timeout: 1 * time.Second}
 
 	req, err := http.NewRequest("GET", c.Url, nil)
 
@@ -43,7 +41,7 @@ func (c *Client) getLatestData() (LatestData, error) {
 
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Auth-Token", c.ApiKey)
+	req.Header.Add("Auth-Token", c.apiKey)
 	resp, err := client.Do(req)
 
 	if err != nil {
