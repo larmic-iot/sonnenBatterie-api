@@ -11,13 +11,13 @@ import (
 func main() {
 	log.Println("Hello sonnenBatterie-api!")
 
-	tokens, err := env.ReadAuthenticationTokens()
+	environment, err := env.ReadVariables()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Print(tokens)
+	log.Print(environment)
 
 	router := api.NewRouter()
 
