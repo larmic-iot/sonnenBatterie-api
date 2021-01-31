@@ -1,7 +1,9 @@
 package env
 
 import (
+	"errors"
 	"os"
+	"sonnen-batterie-api/api/test"
 	"testing"
 )
 
@@ -12,21 +14,10 @@ func TestAllVariablesAreSet(t *testing.T) {
 
 	tokens, err := ReadVariables()
 
-	if err != nil {
-		t.Errorf("ReadVariables() != %s, want nil", err.Error())
-	}
-
-	if tokens.BaseUrl != "http://10.10.10.10:80" {
-		t.Errorf("ReadVariables().BaseUrl = %s; want http://10.10.10.10:80", tokens.BaseUrl)
-	}
-
-	if tokens.UserApiKey != "test-user-auth-token" {
-		t.Errorf("ReadVariables().UserApiKey = %s; want test-user-auth-token", tokens.UserApiKey)
-	}
-
-	if tokens.ServiceApiKey != "test-service-auth-token" {
-		t.Errorf("ReadVariables().ServiceApiKey = %s; want test-service-auth-token", tokens.ServiceApiKey)
-	}
+	test.Equals(t, nil, err, "ReadVariables()")
+	test.Equals(t, tokens.BaseUrl, "http://10.10.10.10:80", "ReadVariables().BaseUrl")
+	test.Equals(t, tokens.UserApiKey, "test-user-auth-token", "ReadVariables().UserApiKey")
+	test.Equals(t, tokens.ServiceApiKey, "test-service-auth-token", "ReadVariables().ServiceApiKey")
 }
 
 func TestServiceAuthTokenIsNotSet(t *testing.T) {
@@ -36,21 +27,10 @@ func TestServiceAuthTokenIsNotSet(t *testing.T) {
 
 	tokens, err := ReadVariables()
 
-	if err == nil {
-		t.Errorf("ReadVariables() == nil, want error")
-	}
-
-	if tokens.BaseUrl != "" {
-		t.Errorf("ReadVariables().BaseUrl = %s; want empty string", tokens.BaseUrl)
-	}
-
-	if tokens.UserApiKey != "" {
-		t.Errorf("ReadVariables().UserApiKey = %s; want empty string", tokens.UserApiKey)
-	}
-
-	if tokens.ServiceApiKey != "" {
-		t.Errorf("ReadVariables().ServiceApiKey = %s; want empty string", tokens.ServiceApiKey)
-	}
+	test.Equals(t, errors.New("empty userApiKey or serviceApiKey"), err, "ReadVariables()")
+	test.Equals(t, tokens.BaseUrl, "", "ReadVariables().BaseUrl")
+	test.Equals(t, tokens.UserApiKey, "", "ReadVariables().UserApiKey")
+	test.Equals(t, tokens.ServiceApiKey, "", "ReadVariables().ServiceApiKey")
 }
 
 func TestBaseUrlIsNotSet(t *testing.T) {
@@ -60,21 +40,10 @@ func TestBaseUrlIsNotSet(t *testing.T) {
 
 	tokens, err := ReadVariables()
 
-	if err == nil {
-		t.Errorf("ReadVariables() == nil, want error")
-	}
-
-	if tokens.BaseUrl != "" {
-		t.Errorf("ReadVariables().BaseUrl = %s; want empty string", tokens.BaseUrl)
-	}
-
-	if tokens.UserApiKey != "" {
-		t.Errorf("ReadVariables().UserApiKey = %s; want empty string", tokens.UserApiKey)
-	}
-
-	if tokens.ServiceApiKey != "" {
-		t.Errorf("ReadVariables().ServiceApiKey = %s; want empty string", tokens.ServiceApiKey)
-	}
+	test.Equals(t, errors.New("empty userApiKey or serviceApiKey"), err, "ReadVariables()")
+	test.Equals(t, tokens.BaseUrl, "", "ReadVariables().BaseUrl")
+	test.Equals(t, tokens.UserApiKey, "", "ReadVariables().UserApiKey")
+	test.Equals(t, tokens.ServiceApiKey, "", "ReadVariables().ServiceApiKey")
 }
 
 func TestUserAuthTokenIsNotSet(t *testing.T) {
@@ -84,21 +53,10 @@ func TestUserAuthTokenIsNotSet(t *testing.T) {
 
 	tokens, err := ReadVariables()
 
-	if err == nil {
-		t.Errorf("ReadVariables() == nil, want error")
-	}
-
-	if tokens.BaseUrl != "" {
-		t.Errorf("ReadVariables().BaseUrl = %s; want empty string", tokens.BaseUrl)
-	}
-
-	if tokens.UserApiKey != "" {
-		t.Errorf("ReadVariables().UserApiKey = %s; want empty string", tokens.UserApiKey)
-	}
-
-	if tokens.ServiceApiKey != "" {
-		t.Errorf("ReadVariables().ServiceApiKey = %s; want empty string", tokens.ServiceApiKey)
-	}
+	test.Equals(t, errors.New("empty userApiKey or serviceApiKey"), err, "ReadVariables()")
+	test.Equals(t, tokens.BaseUrl, "", "ReadVariables().BaseUrl")
+	test.Equals(t, tokens.UserApiKey, "", "ReadVariables().UserApiKey")
+	test.Equals(t, tokens.ServiceApiKey, "", "ReadVariables().ServiceApiKey")
 }
 
 func TestTokensAreNotSet(t *testing.T) {
@@ -108,19 +66,8 @@ func TestTokensAreNotSet(t *testing.T) {
 
 	tokens, err := ReadVariables()
 
-	if err == nil {
-		t.Errorf("ReadVariables() == nil, want error")
-	}
-
-	if tokens.BaseUrl != "" {
-		t.Errorf("ReadVariables().BaseUrl = %s; want empty string", tokens.BaseUrl)
-	}
-
-	if tokens.UserApiKey != "" {
-		t.Errorf("ReadVariables().UserApiKey = %s; want empty string", tokens.UserApiKey)
-	}
-
-	if tokens.ServiceApiKey != "" {
-		t.Errorf("ReadVariables().ServiceApiKey = %s; want empty string", tokens.ServiceApiKey)
-	}
+	test.Equals(t, errors.New("empty userApiKey or serviceApiKey"), err, "ReadVariables()")
+	test.Equals(t, tokens.BaseUrl, "", "ReadVariables().BaseUrl")
+	test.Equals(t, tokens.UserApiKey, "", "ReadVariables().UserApiKey")
+	test.Equals(t, tokens.ServiceApiKey, "", "ReadVariables().ServiceApiKey")
 }
