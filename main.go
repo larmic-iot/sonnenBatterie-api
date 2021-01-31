@@ -5,12 +5,13 @@ import (
 	"log"
 	"net/http"
 	"sonnen-batterie-api/api"
+	"sonnen-batterie-api/api/env"
 )
 
 func main() {
 	log.Println("Hello sonnenBatterie-api!")
 
-	tokens, err := api.ReadAuthenticationTokens()
+	tokens, err := env.ReadAuthenticationTokens()
 
 	if err != nil {
 		log.Fatal(err)

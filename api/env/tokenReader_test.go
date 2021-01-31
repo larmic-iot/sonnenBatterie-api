@@ -1,4 +1,4 @@
-package api
+package env
 
 import (
 	"os"
