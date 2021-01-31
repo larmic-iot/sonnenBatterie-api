@@ -21,11 +21,11 @@ func TestClient_getLatestData(t *testing.T) {
 	defer server.Close()
 
 	client := NewClient(server.URL, apiKey)
-	latestData, err := client.getLatestData()
+	latestData, err := client.GetLatestData()
 
-	test.Equals(t, nil, err, "client.getLatestData()")
-	test.Equals(t, 749, latestData.ConsumptionInWatt, "client.getLatestData()")
-	test.Equals(t, 211, latestData.ProductionInWatt, "client.getLatestData()")
+	test.Equals(t, nil, err, "client.GetLatestData()")
+	test.Equals(t, 749, latestData.ConsumptionInWatt, "client.GetLatestData()")
+	test.Equals(t, 211, latestData.ProductionInWatt, "client.GetLatestData()")
 }
 
 func TestClient_getLatestData_Api_Key_Not_Matching(t *testing.T) {
@@ -34,28 +34,28 @@ func TestClient_getLatestData_Api_Key_Not_Matching(t *testing.T) {
 	defer server.Close()
 
 	client := NewClient(server.URL, "not-matching")
-	latestData, err := client.getLatestData()
+	latestData, err := client.GetLatestData()
 
-	test.Equals(t, errors.New("status code is 401"), err, "client.getLatestData()")
-	test.Equals(t, LatestData{}, latestData, "client.getLatestData()")
+	test.Equals(t, errors.New("status code is 401"), err, "client.GetLatestData()")
+	test.Equals(t, LatestData{}, latestData, "client.GetLatestData()")
 }
 
 func TestClient_getLatestData_SonnenBatterie_not_found(t *testing.T) {
 	client := NewClient("http://10.10.10.10:80", apiKey)
-	latestData, err := client.getLatestData()
+	latestData, err := client.GetLatestData()
 
 	timeoutError := mapToTimeoutError(err)
 
-	test.Equals(t, "Get", timeoutError.Operation, "client.getLatestData()")
-	test.Equals(t, "http://10.10.10.10:80/api/v2/latestdata", timeoutError.URL, "client.getLatestData()")
-	test.Equals(t, "context deadline exceeded (Client.Timeout exceeded while awaiting headers)", timeoutError.Message, "client.getLatestData()")
-	test.Equals(t, true, timeoutError.Timeout, "client.getLatestData()")
-	test.Equals(t, LatestData{}, latestData, "client.getLatestData()")
+	test.Equals(t, "Get", timeoutError.Operation, "client.GetLatestData()")
+	test.Equals(t, "http://10.10.10.10:80/api/v2/latestdata", timeoutError.URL, "client.GetLatestData()")
+	test.Equals(t, "context deadline exceeded (Client.Timeout exceeded while awaiting headers)", timeoutError.Message, "client.GetLatestData()")
+	test.Equals(t, true, timeoutError.Timeout, "client.GetLatestData()")
+	test.Equals(t, LatestData{}, latestData, "client.GetLatestData()")
 }
 
 func startServer(t *testing.T) *httptest.Server {
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		test.Equals(t, req.URL.String(), "/api/v2/latestdata", "client.getLatestData()")
+		test.Equals(t, req.URL.String(), "/api/v2/latestdata", "client.GetLatestData()")
 
 		if req.Header.Get("Auth-Token") != apiKey {
 			rw.WriteHeader(http.StatusUnauthorized)

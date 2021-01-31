@@ -33,4 +33,10 @@ var routes = Routes{
 		Pattern:     "/api",
 		HandlerFunc: OpenApiDocumentation,
 	},
+	Route{
+		Name:        "Consumption",
+		Method:      "GET",
+		Pattern:     "/api/consumption",
+		HandlerFunc: ConsumptionHandler,
+	},
 }

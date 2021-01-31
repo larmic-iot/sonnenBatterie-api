@@ -19,8 +19,8 @@ type Client struct {
 }
 
 type LatestData struct {
-	ConsumptionInWatt int `json:"Consumption_W"`
-	ProductionInWatt  int `json:"Production_W"`
+	ConsumptionInWatt int64 `json:"Consumption_W"`
+	ProductionInWatt  int64 `json:"Production_W"`
 }
 
 func NewClient(baseUrl string, apiKey string) *Client {
@@ -30,7 +30,7 @@ func NewClient(baseUrl string, apiKey string) *Client {
 	}
 }
 
-func (c *Client) getLatestData() (LatestData, error) {
+func (c *Client) GetLatestData() (LatestData, error) {
 	client := &http.Client{Timeout: 1 * time.Second}
 
 	req, err := http.NewRequest("GET", c.Url, nil)
