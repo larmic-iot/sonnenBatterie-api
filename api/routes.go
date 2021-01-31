@@ -2,13 +2,20 @@ package api
 
 import (
 	"net/http"
+	"sonnen-batterie-api/api/env"
 )
+
+type HandlerFunc func(env.Environment, http.ResponseWriter, *http.Request)
+
+func (f HandlerFunc) ServeHTTP(e env.Environment, w http.ResponseWriter, r *http.Request) {
+	f(e, w, r)
+}
 
 type Route struct {
 	Name        string
 	Method      string
 	Pattern     string
-	HandlerFunc http.HandlerFunc
+	HandlerFunc HandlerFunc
 }
 
 type Routes []Route

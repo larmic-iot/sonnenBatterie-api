@@ -17,9 +17,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Print(environment)
-
-	router := api.NewRouter()
+	router := api.NewRouter(environment)
 
 	log.Fatal(http.ListenAndServe(":8080", handlers.CORS(handlers.AllowedOrigins([]string{"*"}))(router)))
 }

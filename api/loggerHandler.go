@@ -3,14 +3,15 @@ package api
 import (
 	"log"
 	"net/http"
+	"sonnen-batterie-api/api/env"
 	"time"
 )
 
-func Logger(inner http.Handler, name string) http.Handler {
+func Logger(e env.Environment, inner HandlerFunc, name string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 
-		inner.ServeHTTP(w, r)
+		inner.ServeHTTP(e, w, r)
 
 		log.Printf(
 			"%s\t%s\t%s\t%s",

@@ -17,6 +17,7 @@ func ReadVariables() (Environment, error) {
 	var serviceApiKey = os.Getenv("SONNENBATTERIE_SERVICE_API_KEY")
 
 	if userApiKey == "" || serviceApiKey == "" || baseUrl == "" {
+		// TODO replace text
 		return Environment{}, errors.New("empty userApiKey or serviceApiKey")
 	}
 

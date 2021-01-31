@@ -1,20 +1,17 @@
 package api
 
 import (
-	"net/http"
+	"sonnen-batterie-api/api/env"
 
 	"github.com/gorilla/mux"
 )
 
-func NewRouter() *mux.Router {
+func NewRouter(environment env.Environment) *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	router.NotFoundHandler = Handle404()
 
 	for _, route := range routes {
-		var handler http.Handler
-
-		handler = route.HandlerFunc
-		handler = Logger(handler, route.Name)
+		handler := Logger(environment, route.HandlerFunc, route.Name)
 
 		router.
 			Methods(route.Method).
