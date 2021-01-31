@@ -24,8 +24,8 @@ func TestClient_getLatestData(t *testing.T) {
 	latestData, err := client.GetLatestData()
 
 	test.Equals(t, nil, err, "client.GetLatestData()")
-	test.Equals(t, 749, latestData.ConsumptionInWatt, "client.GetLatestData()")
-	test.Equals(t, 211, latestData.ProductionInWatt, "client.GetLatestData()")
+	test.Equals(t, 749, int(latestData.ConsumptionInWatt), "client.GetLatestData()")
+	test.Equals(t, 211, int(latestData.ProductionInWatt), "client.GetLatestData()")
 }
 
 func TestClient_getLatestData_Api_Key_Not_Matching(t *testing.T) {
