@@ -16,7 +16,7 @@ const (
 )
 
 func TestClient_getLatestData(t *testing.T) {
-	server := startServer(t)
+	server := startGetLatestDataServer(t)
 
 	defer server.Close()
 
@@ -29,7 +29,7 @@ func TestClient_getLatestData(t *testing.T) {
 }
 
 func TestClient_getLatestData_Api_Key_Not_Matching(t *testing.T) {
-	server := startServer(t)
+	server := startGetLatestDataServer(t)
 
 	defer server.Close()
 
@@ -54,7 +54,7 @@ func TestClient_getLatestData_SonnenBatterie_not_found(t *testing.T) {
 	test.Equals(t, LatestData{}, latestData, "client.GetLatestData()")
 }
 
-func startServer(t *testing.T) *httptest.Server {
+func startGetLatestDataServer(t *testing.T) *httptest.Server {
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		test.Equals(t, req.URL.String(), "/api/v2/latestdata", "client.GetLatestData()")
 
