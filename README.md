@@ -9,7 +9,6 @@
 TODO: 
 * implement this tool
 * write some intro
-* add version filtering to open-api-3.yaml
 * check (just copied) yaml
 
 ## Versioning
