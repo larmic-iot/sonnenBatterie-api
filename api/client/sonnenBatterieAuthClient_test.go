@@ -11,7 +11,7 @@ func Test(t *testing.T) {
 	defer server.Close()
 	ip := strings.Trim(server.URL, "http://")
 
-	client := NewAuthClient(ip, "User", Password)
+	client := NewAuthClient(ip, "User", SonnenBatterieMockPassword)
 
-	test.Equals(t, "test-auth-token", client.GetAuthToken(), "GetAuthToken()")
+	test.Equals(t, SonnenBatterieMockAuthToken, client.GetAuthToken(), "GetAuthToken()")
 }

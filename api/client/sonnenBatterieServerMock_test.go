@@ -10,40 +10,58 @@ import (
 )
 
 const (
-	Challenge = "test-challenge"
-	Password  = "test-password"
-	AuthToken = "test-auth-token"
+	SonnenBatterieMockChallenge = "test-challenge"
+	SonnenBatterieMockPassword  = "test-password"
+	SonnenBatterieMockAuthToken = "test-auth-token"
 )
 
 func startSonnenBatterieServer(t *testing.T) *httptest.Server {
-	encryptedPassword := crypto.Encrypt(Password, Challenge)
-
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		if req.Method == "GET" && req.URL.String() == "/api/challenge" {
-			_, _ = rw.Write([]byte("\"" + Challenge + "\""))
-		} else if req.Method == "POST" && req.URL.String() == "/api/session" {
-			var b body
-			_ = json.NewDecoder(req.Body).Decode(&b)
+		switch req.URL.String() {
+		case "/api/challenge":
+			doGetChallenge(t, rw, req)
+			break
 
-			if b.User != "User" {
-				_ = fmt.Sprintf("POST /api/session body user: = %s, want: User", b.User)
-				t.FailNow()
-			}
-			if b.Challenge != Challenge {
-				_ = fmt.Sprintf("POST /api/session body challenge: = %s, want: "+Challenge+"", b.Challenge)
-				t.FailNow()
-			}
-			if b.Response != encryptedPassword {
-				_ = fmt.Sprintf("POST /api/session body response: = %s, want: "+encryptedPassword+"", b.Response)
-				t.FailNow()
-			}
+		case "/api/session":
+			doPostSession(t, rw, req)
 
-			_, _ = rw.Write([]byte("{\"authentication_token\":\"" + AuthToken + "\"}"))
-		} else {
+			break
+		default:
 			_ = fmt.Sprintf("URL %s not known on test server", req.URL.String())
 			t.FailNow()
 		}
 	}))
 
 	return server
+}
+
+func doGetChallenge(t *testing.T, rw http.ResponseWriter, req *http.Request) {
+	if req.Method != "GET" {
+		_ = fmt.Sprintf("%s /api/session, want: GET", req.Method)
+		t.FailNow()
+	}
+
+	_, _ = rw.Write([]byte("\"" + SonnenBatterieMockChallenge + "\""))
+}
+
+func doPostSession(t *testing.T, rw http.ResponseWriter, req *http.Request) {
+	encryptedPassword := crypto.Encrypt(SonnenBatterieMockPassword, SonnenBatterieMockChallenge)
+
+	var b body
+	_ = json.NewDecoder(req.Body).Decode(&b)
+
+	if b.User != "User" {
+		_ = fmt.Sprintf("POST /api/session body user: = %s, want: User", b.User)
+		t.FailNow()
+	}
+	if b.Challenge != SonnenBatterieMockChallenge {
+		_ = fmt.Sprintf("POST /api/session body challenge: = %s, want: "+SonnenBatterieMockChallenge+"", b.Challenge)
+		t.FailNow()
+	}
+	if b.Response != encryptedPassword {
+		_ = fmt.Sprintf("POST /api/session body response: = %s, want: "+encryptedPassword+"", b.Response)
+		t.FailNow()
+	}
+
+	_, _ = rw.Write([]byte("{\"authentication_token\":\"" + SonnenBatterieMockAuthToken + "\"}"))
 }
