@@ -1,7 +1,7 @@
 openapi: 3.1.0
 
 info:
-  title: TP-Link Smart Home HS110 Plug API
+  title: SonnenBatterie API
   version: ${VERSION}
   contact:
     name: Lars Michaelis
@@ -11,48 +11,50 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0
 
 paths:
-  /api/{plugIp}:
+  /api:
     get:
-      summary: Returns a smart plug general info by ip.
-      parameters:
-        - name: plugIp
-          in: path
-          required: true
-          description: ip address of plug (i.e. 10.0.0.100)
-          schema:
-            type: string
+      summary: Returns SonnenBatterie info.
       responses:
         '200':
-          description: Smart plug
+          description: SonnenBatterie system
           content:
             'application/json':
               schema:
                 $ref: "#/components/schemas/System"
         '404':
-          description: Smart plug not found.
+          description: SonnenBatterie not found.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProtocolError"
-  /api/{plugIp}/consumption:
+  /api/consumption:
     get:
-      summary: Returns a smart plug consumption info by ip.
-      parameters:
-        - name: plugIp
-          in: path
-          required: true
-          description: ip address of plug (i.e. 10.0.0.100)
-          schema:
-            type: string
+      summary: Returns SonnenBatterie consumption info.
       responses:
         '200':
-          description: Smart plug consumption info
+          description: SonnenBatterie consumption info
           content:
             'application/json':
               schema:
                 $ref: "#/components/schemas/Consumption"
         '404':
-          description: Smart plug not found.
+          description: SonnenBatterie not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProtocolError"
+  /api/generation:
+    get:
+      summary: Returns SonnenBatterie generation info.
+      responses:
+        '200':
+          description: SonnenBatterie generation info
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Generation"
+        '404':
+          description: SonnenBatterie not found.
           content:
             application/json:
               schema:
@@ -64,66 +66,64 @@ components:
     System:
       required:
         - ip
-        - port
-        - alias
+        - wanIp
+        - vpnIp
         - model
         - mac
         - softwareVersion
         - hardwareVersion
         - led
-        - switch
       properties:
         ip:
           type: string
-          description: Smart plug ip addres (i.e. 10.0.0.100).
-        port:
-          type: integer
-          description: Smart plug port (i.e. 9999).
-        name:
+          description: SonnenBatterie internal addres (i.e. 10.0.0.100).
+        wanIp:
           type: string
-          description: Smart plug name or alias.
-        icon:
+          description: SonnenBatterie external addres (i.e. 31.31.31.31).
+        vpnIp:
           type: string
-          description: Smart plug icon hash.
+          description: SonnenBatterie vpn addres (i.e. 41.41.41.41).
         model:
           type: string
-          description: Smart plug model.
+          description: SonnenBatterie model name.
         mac:
           type: string
-          description: Smart plug mac address.
+          description: SonnenBatterie mac address.
         softwareVersion:
           type: string
-          description: Smart plug software version.
+          description: SonnenBatterie software version.
         hardwareVersion:
           type: string
-          description: Smart plug hardware version.
+          description: SonnenBatterie hardware version.
         led:
           type: string
-          description: Smart plug led state.
+          description: SonnenBatterie led state.
           enum:
-            - on
-            - off
-        power:
-          type: string
-          description: Smart plug power switch state.
-          enum:
-            - on
-            - off
+            - white
+            - green
+            - orange
+            - red
+
     Consumption:
       required:
         - current_mw
-        - today_wh
-        - total_wh
       properties:
         current_mw:
           type: integer
-          description: Actual consumption in milli watt
-        today_wh:
+          description: Actual house consumption in milli watt
+
+    Generation:
+      required:
+        - grid_feed_in_mw
+        - production_mw
+      properties:
+        grid_feed_in_mw:
           type: integer
-          description: Consumption of the day in watt per hours
-        total_wh:
+          description: Actual grid feed in in milli watt
+        production_mw:
           type: integer
-          description: Consumption since switch on device in watt per hours
+          description: Actual solar production in milli watt
+
     ProtocolError:
       required:
         - code
