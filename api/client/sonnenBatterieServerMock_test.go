@@ -32,6 +32,11 @@ func startSonnenBatterieServer(t *testing.T) *httptest.Server {
 			doGetLatestData(t, rw, req)
 
 			break
+
+		case "/api/v2/status":
+			doGetStatus(t, rw, req)
+
+			break
 		default:
 			_ = fmt.Sprintf("URL %s not known on test server", req.URL.String())
 			t.FailNow()
@@ -79,11 +84,22 @@ func doPostSession(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 
 func doGetLatestData(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 	if req.Method != "GET" {
-		_ = fmt.Sprintf("%s /api/session, want: GET", req.Method)
+		_ = fmt.Sprintf("%s /api/v2/latestdata, want: GET", req.Method)
 		t.FailNow()
 	}
 
 	dat, _ := ioutil.ReadFile("test_response_get_latest_data.json")
+	rw.WriteHeader(http.StatusOK)
+	_, _ = rw.Write(dat)
+}
+
+func doGetStatus(t *testing.T, rw http.ResponseWriter, req *http.Request) {
+	if req.Method != "GET" {
+		_ = fmt.Sprintf("%s /api/v2/status, want: GET", req.Method)
+		t.FailNow()
+	}
+
+	dat, _ := ioutil.ReadFile("test_response_get_status.json")
 	rw.WriteHeader(http.StatusOK)
 	_, _ = rw.Write(dat)
 }

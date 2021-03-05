@@ -29,6 +29,13 @@ type LatestData struct {
 	IcStatus          IcStatus `json:"ic_status"`
 }
 
+type Status struct {
+	GridFeedInInWatt int64 `json:"GridFeedIn_W"`
+	Charging         bool  `json:"BatteryCharging"`
+	Discharging      bool  `json:"BatteryDischarging"`
+	ChargeLevel      int64 `json:"RSOC"`
+}
+
 func NewClient(ip string, user string, password string) *Client {
 	return &Client{
 		Ip:       ip,
@@ -54,6 +61,25 @@ func (c *Client) GetLatestData() (LatestData, error) {
 	}
 
 	return latestData, nil
+}
+
+func (c *Client) GetStatus() (Status, error) {
+	client := NewAuthClient(c.Ip, c.user, c.password)
+	token := client.GetAuthToken()
+
+	url := "http://" + c.Ip + "/api/v2/status"
+
+	response := getRequest(url, token)
+
+	var status Status
+
+	err := json.Unmarshal([]byte(response), &status)
+
+	if err != nil {
+		return Status{}, err
+	}
+
+	return status, nil
 }
 
 func getRequest(url, token string) string {
