@@ -8,66 +8,66 @@ import (
 )
 
 func TestAllVariablesAreSet(t *testing.T) {
-	_ = os.Setenv("SONNENBATTERIE_BASE_URL", "http://10.10.10.10:80")
-	_ = os.Setenv("SONNENBATTERIE_USER_API_KEY", "test-user-auth-token")
-	_ = os.Setenv("SONNENBATTERIE_SERVICE_API_KEY", "test-service-auth-token")
+	_ = os.Setenv("SONNENBATTERIE_IP", "10.10.10.10")
+	_ = os.Setenv("SONNENBATTERIE_USER_NAME", "test-user-name")
+	_ = os.Setenv("SONNENBATTERIE_USER_PASSWORD", "test-user-password")
 
 	tokens, err := ReadVariables()
 
 	test.Equals(t, nil, err, "ReadVariables()")
-	test.Equals(t, tokens.BaseUrl, "http://10.10.10.10:80", "ReadVariables().BaseUrl")
-	test.Equals(t, tokens.UserApiKey, "test-user-auth-token", "ReadVariables().UserApiKey")
-	test.Equals(t, tokens.ServiceApiKey, "test-service-auth-token", "ReadVariables().ServiceApiKey")
+	test.Equals(t, tokens.Ip, "10.10.10.10", "ReadVariables().Ip")
+	test.Equals(t, tokens.UserName, "test-user-name", "ReadVariables().UserName")
+	test.Equals(t, tokens.UserPassword, "test-user-password", "ReadVariables().UserPassword")
 }
 
-func TestServiceAuthTokenIsNotSet(t *testing.T) {
-	_ = os.Setenv("SONNENBATTERIE_BASE_URL", "http://10.10.10.10:80")
-	_ = os.Setenv("SONNENBATTERIE_USER_API_KEY", "test-user-auth-token")
-	_ = os.Unsetenv("SONNENBATTERIE_SERVICE_API_KEY")
+func TestUserPasswordIsNotSet(t *testing.T) {
+	_ = os.Setenv("SONNENBATTERIE_IP", "10.10.10.10")
+	_ = os.Setenv("SONNENBATTERIE_USER_NAME", "test-user-name")
+	_ = os.Unsetenv("SONNENBATTERIE_USER_PASSWORD")
 
 	tokens, err := ReadVariables()
 
-	test.Equals(t, errors.New("empty userApiKey or serviceApiKey"), err, "ReadVariables()")
-	test.Equals(t, tokens.BaseUrl, "", "ReadVariables().BaseUrl")
-	test.Equals(t, tokens.UserApiKey, "", "ReadVariables().UserApiKey")
-	test.Equals(t, tokens.ServiceApiKey, "", "ReadVariables().ServiceApiKey")
+	test.Equals(t, errors.New("empty userName or userPassword"), err, "ReadVariables()")
+	test.Equals(t, tokens.Ip, "", "ReadVariables().Ip")
+	test.Equals(t, tokens.UserName, "", "ReadVariables().UserName")
+	test.Equals(t, tokens.UserPassword, "", "ReadVariables().UserPassword")
 }
 
 func TestBaseUrlIsNotSet(t *testing.T) {
-	_ = os.Unsetenv("SONNENBATTERIE_BASE_URL")
-	_ = os.Setenv("SONNENBATTERIE_USER_API_KEY", "test-user-auth-token")
-	_ = os.Setenv("SONNENBATTERIE_SERVICE_API_KEY", "test-service-auth-token")
+	_ = os.Unsetenv("SONNENBATTERIE_IP")
+	_ = os.Setenv("SONNENBATTERIE_USER_NAME", "test-user-name")
+	_ = os.Setenv("SONNENBATTERIE_USER_PASSWORD", "test-user-password")
 
 	tokens, err := ReadVariables()
 
-	test.Equals(t, errors.New("empty userApiKey or serviceApiKey"), err, "ReadVariables()")
-	test.Equals(t, tokens.BaseUrl, "", "ReadVariables().BaseUrl")
-	test.Equals(t, tokens.UserApiKey, "", "ReadVariables().UserApiKey")
-	test.Equals(t, tokens.ServiceApiKey, "", "ReadVariables().ServiceApiKey")
+	test.Equals(t, errors.New("empty userName or userPassword"), err, "ReadVariables()")
+	test.Equals(t, tokens.Ip, "", "ReadVariables().Ip")
+	test.Equals(t, tokens.UserName, "", "ReadVariables().UserName")
+	test.Equals(t, tokens.UserPassword, "", "ReadVariables().UserPassword")
 }
 
-func TestUserAuthTokenIsNotSet(t *testing.T) {
-	_ = os.Setenv("SONNENBATTERIE_BASE_URL", "http://10.10.10.10:80")
-	_ = os.Unsetenv("SONNENBATTERIE_USER_API_KEY")
-	_ = os.Setenv("SONNENBATTERIE_SERVICE_API_KEY", "test-service-auth-token")
+func TestUserNameIsNotSet(t *testing.T) {
+	_ = os.Setenv("SONNENBATTERIE_IP", "10.10.10.10")
+	_ = os.Unsetenv("SONNENBATTERIE_USER_NAME")
+	_ = os.Setenv("SONNENBATTERIE_USER_PASSWORD", "test-user-password")
 
 	tokens, err := ReadVariables()
 
-	test.Equals(t, errors.New("empty userApiKey or serviceApiKey"), err, "ReadVariables()")
-	test.Equals(t, tokens.BaseUrl, "", "ReadVariables().BaseUrl")
-	test.Equals(t, tokens.UserApiKey, "", "ReadVariables().UserApiKey")
-	test.Equals(t, tokens.ServiceApiKey, "", "ReadVariables().ServiceApiKey")
+	test.Equals(t, errors.New("empty userName or userPassword"), err, "ReadVariables()")
+	test.Equals(t, tokens.Ip, "", "ReadVariables().Ip")
+	test.Equals(t, tokens.UserName, "", "ReadVariables().UserName")
+	test.Equals(t, tokens.UserPassword, "", "ReadVariables().UserPassword")
 }
 
 func TestTokensAreNotSet(t *testing.T) {
-	_ = os.Unsetenv("SONNENBATTERIE_BASE_URL")
-	_ = os.Unsetenv("SONNENBATTERIE_USER_API_KEY")
-	_ = os.Unsetenv("SONNENBATTERIE_SERVICE_API_KEY")
+	_ = os.Unsetenv("SONNENBATTERIE_IP")
+	_ = os.Unsetenv("SONNENBATTERIE_USER_NAME")
+	_ = os.Unsetenv("SONNENBATTERIE_USER_PASSWORD")
 
 	tokens, err := ReadVariables()
 
-	test.Equals(t, errors.New("empty userApiKey or serviceApiKey"), err, "ReadVariables()")
-	test.Equals(t, tokens.BaseUrl, "", "ReadVariables().BaseUrl")
-	test.Equals(t, tokens.UserApiKey, "", "ReadVariables().UserApiKey")
-	test.Equals(t, tokens.ServiceApiKey, "", "ReadVariables().ServiceApiKey")
+	test.Equals(t, errors.New("empty userName or userPassword"), err, "ReadVariables()")
+	test.Equals(t, tokens.Ip, "", "ReadVariables().Ip")
+	test.Equals(t, tokens.UserName, "", "ReadVariables().UserName")
+	test.Equals(t, tokens.UserPassword, "", "ReadVariables().UserPassword")
 }

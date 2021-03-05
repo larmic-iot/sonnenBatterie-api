@@ -2,20 +2,14 @@ package client
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
-	"time"
-)
-
-const (
-	contextPath = "/api/v2/latestdata"
 )
 
 type Client struct {
-	Url    string
-	apiKey string
+	Ip       string
+	user     string
+	password string
 }
 
 type LatestData struct {
@@ -23,50 +17,39 @@ type LatestData struct {
 	ProductionInWatt  int64 `json:"Production_W"`
 }
 
-func NewClient(baseUrl string, apiKey string) *Client {
+func NewClient(ip string, user string, password string) *Client {
 	return &Client{
-		Url:    baseUrl + contextPath,
-		apiKey: apiKey,
+		Ip:       ip,
+		user:     user,
+		password: password,
 	}
 }
 
 func (c *Client) GetLatestData() (LatestData, error) {
-	client := &http.Client{Timeout: 1 * time.Second}
+	client := NewAuthClient(c.Ip, c.user, c.password)
+	token := client.GetAuthToken()
 
-	req, err := http.NewRequest("GET", c.Url, nil)
+	url := "http://" + c.Ip + "/api/v2/latestdata"
 
-	if err != nil {
-		return LatestData{}, err
-	}
-
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Auth-Token", c.apiKey)
-	resp, err := client.Do(req)
-
-	if err != nil {
-		return LatestData{}, err
-	}
-
-	if resp.StatusCode != 200 {
-		return LatestData{}, errors.New(fmt.Sprintf("status code is %d", resp.StatusCode))
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		return LatestData{}, err
-	}
+	response := getRequest(url, token)
 
 	var latestData LatestData
 
-	err = json.Unmarshal(body, &latestData)
+	err := json.Unmarshal([]byte(response), &latestData)
 
 	if err != nil {
 		return LatestData{}, err
 	}
 
 	return latestData, nil
+}
+
+func getRequest(url, token string) string {
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("Auth-Token", token)
+	client := &http.Client{}
+	// TODO return err
+	resp, _ := client.Do(req)
+	body, _ := ioutil.ReadAll(resp.Body)
+	return string(body)
 }

@@ -9,7 +9,7 @@ import (
 )
 
 func ConsumptionHandler(env env.Environment, w http.ResponseWriter, r *http.Request) {
-	client := sonnenBatterieClient.NewClient(env.BaseUrl, env.UserApiKey)
+	client := sonnenBatterieClient.NewClient(env.Ip, env.UserName, env.UserPassword)
 	latestData, err := client.GetLatestData()
 
 	// TODO find better status?
@@ -22,7 +22,7 @@ func ConsumptionHandler(env env.Environment, w http.ResponseWriter, r *http.Requ
 			Encode(
 				model.ProtocolError{
 					Code:    http.StatusNotFound,
-					Message: env.BaseUrl + " not found!",
+					Message: env.Ip + " not found!",
 				})
 		return
 	}

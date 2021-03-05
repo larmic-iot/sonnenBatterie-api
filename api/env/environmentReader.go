@@ -6,24 +6,24 @@ import (
 )
 
 type Environment struct {
-	BaseUrl       string
-	UserApiKey    string
-	ServiceApiKey string
+	Ip           string
+	UserName     string
+	UserPassword string
 }
 
 func ReadVariables() (Environment, error) {
-	var baseUrl = os.Getenv("SONNENBATTERIE_BASE_URL")
-	var userApiKey = os.Getenv("SONNENBATTERIE_USER_API_KEY")
-	var serviceApiKey = os.Getenv("SONNENBATTERIE_SERVICE_API_KEY")
+	var ip = os.Getenv("SONNENBATTERIE_IP")
+	var userName = os.Getenv("SONNENBATTERIE_USER_NAME")
+	var userPassword = os.Getenv("SONNENBATTERIE_USER_PASSWORD")
 
-	if userApiKey == "" || serviceApiKey == "" || baseUrl == "" {
+	if userName == "" || userPassword == "" || ip == "" {
 		// TODO replace text
-		return Environment{}, errors.New("empty userApiKey or serviceApiKey")
+		return Environment{}, errors.New("empty userName or userPassword")
 	}
 
 	return Environment{
-		BaseUrl:       baseUrl,
-		UserApiKey:    userApiKey,
-		ServiceApiKey: serviceApiKey,
+		Ip:           ip,
+		UserName:     userName,
+		UserPassword: userPassword,
 	}, nil
 }
