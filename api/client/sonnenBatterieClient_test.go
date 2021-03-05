@@ -19,6 +19,6 @@ func TestGetLatestData(t *testing.T) {
 		t.Errorf("GetLatestData(%s) returns error", ip)
 	}
 
-	test.Equals(t, int64(7801), data.ProductionInWatt, "GetLatestData()")
-	test.Equals(t, int64(620), data.ConsumptionInWatt, "GetLatestData()")
+	test.Equals(t, int64(7135), data.ProductionInWatt, "GetLatestData()")
+	test.Equals(t, int64(675), data.ConsumptionInWatt, "GetLatestData()")
 }

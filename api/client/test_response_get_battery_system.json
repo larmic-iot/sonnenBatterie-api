@@ -1,0 +1,52 @@
+{
+  "battery_system": {
+    "network": {
+      "wanip": "31.31.31.31",
+      "lanip": "10.0.0.100",
+      "vpnip": "41.41.41.41"
+    },
+    "ecu": {
+      "version": 2,
+      "board": "Advantech/sonnen SBC+ ebcrc01-a1\u0000"
+    },
+    "system": {
+      "bms_technology": "sonnenmodule 3",
+      "inverter_type": "openframe-1ph",
+      "system_time": "2021-03-05 14:18:35.155543",
+      "serial": "100000",
+      "hardware_line": "sonnenBatterie",
+      "storage_capacity_per_module": "2750",
+      "hardware_article": "3000060",
+      "hardware_version": 10.0,
+      "inverter_capacity": "3400",
+      "mac_address": "c4:00:ad:53:ec:b3",
+      "model": "14",
+      "model_name": "power unit sB10s sI1 9010 IP30",
+      "storage_capacity": "2"
+    },
+    "software": {
+      "firmware_version": "1.5.5.781986",
+      "release_channel": "stable",
+      "software_version": "1.5.5"
+    }
+  },
+  "modules": 2,
+  "marketing_capacity": "2750",
+  "stack_capacity": 0,
+  "grid_information": {
+    "fac": "49.991",
+    "iac_total": "0.40",
+    "ibat": "-0.01",
+    "ipv": "0.00",
+    "pac_microgrid": "0.00",
+    "pac_total": "-3.19",
+    "pbat": "-4.34",
+    "phi": "0.00",
+    "ppv": "0.00",
+    "sac_total": "94.40",
+    "tmax": "35.93",
+    "uac": "233.59",
+    "ubat": "217.62",
+    "upv": "0.00"
+  }
+}

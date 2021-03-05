@@ -1,12 +1,12 @@
 {
-  "Consumption_W": 620,
+  "Consumption_W": 675,
   "FullChargeCapacity": 48828,
   "GridFeedIn_W": 0,
   "Pac_total_W": -3,
-  "Production_W": 7801,
+  "Production_W": 7135,
   "RSOC": 100,
   "SetPoint_W": 0,
-  "Timestamp": "2021-03-05 13:25:03",
+  "Timestamp": "2021-03-05 14:21:44",
   "USOC": 100,
   "UTC_Offet": 1,
   "ic_status": {
@@ -94,6 +94,6 @@
     "statebms": "ready",
     "statecorecontrolmodule": "ongrid",
     "stateinverter": "running",
-    "timestamp": "Fri Mar 5 13:25:00 2021"
+    "timestamp": "Fri Mar 5 14:21:42 2021"
   }
 }
