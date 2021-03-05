@@ -2,15 +2,12 @@ package client
 
 import (
 	"errors"
-	"net/http"
-	"net/http/httptest"
-	"sonnen-batterie-api/api/test"
 	"strings"
 	"testing"
 )
 
 func TestGetChallenge(t *testing.T) {
-	server := startChallengeServer(t)
+	server := startSonnenBatterieServer(t)
 	defer server.Close()
 	ip := strings.Trim(server.URL, "http://")
 
@@ -40,14 +37,4 @@ func TestGetChallenge(t *testing.T) {
 			}
 		})
 	}
-}
-
-func startChallengeServer(t *testing.T) *httptest.Server {
-	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		test.Equals(t, req.URL.String(), "/api/challenge", "GetChallenge(ip)")
-
-		_, _ = rw.Write([]byte("\"test-challenge\""))
-	}))
-
-	return server
 }
