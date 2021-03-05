@@ -83,7 +83,7 @@ func doGetLatestData(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 		t.FailNow()
 	}
 
-	dat, _ := ioutil.ReadFile("test_response_get_latest.json")
+	dat, _ := ioutil.ReadFile("test_response_get_latest_data.json")
 	rw.WriteHeader(http.StatusOK)
 	_, _ = rw.Write(dat)
 }

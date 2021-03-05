@@ -12,7 +12,6 @@ func ConsumptionHandler(env env.Environment, w http.ResponseWriter, r *http.Requ
 	client := sonnenBatterieClient.NewClient(env.Ip, env.UserName, env.UserPassword)
 	latestData, err := client.GetLatestData()
 
-	// TODO find better status?
 	if err != nil {
 		w.Header().Add("Content-Type", "text/plain; charset=UTF-8")
 		w.WriteHeader(http.StatusNotFound)

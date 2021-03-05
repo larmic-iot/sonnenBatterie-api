@@ -9,7 +9,7 @@
 TODO: 
 * implement this tool
 * write some intro
-* check (just copied) yaml
+* battery charge status?
 
 ## Versioning
 
