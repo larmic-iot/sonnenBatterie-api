@@ -28,7 +28,7 @@ func TestGetChallenge(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got, _ := GetChallenge(tt.args.ip); got != tt.want.challenge {
-				t.Errorf("GetChallenge("+tt.args.ip+") = %v, want %v", got, tt.want.challenge)
+				t.Errorf("GetChallenge(%s) = %v, want %v", tt.args.ip, got, tt.want.challenge)
 			}
 			if _, err := GetChallenge(tt.args.ip); err != nil && err.Error() != tt.want.err.Error() {
 				t.Errorf("GetChallenge("+tt.args.ip+") = %v, want %v", err.Error(), tt.want.err.Error())

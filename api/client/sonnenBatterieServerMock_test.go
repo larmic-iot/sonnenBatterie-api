@@ -3,6 +3,7 @@ package client
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"sonnen-batterie-api/api/client/crypto"
@@ -26,6 +27,11 @@ func startSonnenBatterieServer(t *testing.T) *httptest.Server {
 			doPostSession(t, rw, req)
 
 			break
+
+		case "/api/v2/latestdata":
+			doGetLatestData(t, rw, req)
+
+			break
 		default:
 			_ = fmt.Sprintf("URL %s not known on test server", req.URL.String())
 			t.FailNow()
@@ -47,6 +53,11 @@ func doGetChallenge(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 func doPostSession(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 	encryptedPassword := crypto.Encrypt(SonnenBatterieMockPassword, SonnenBatterieMockChallenge)
 
+	if req.Method != "POST" {
+		_ = fmt.Sprintf("%s /api/session, want: POST", req.Method)
+		t.FailNow()
+	}
+
 	var b body
 	_ = json.NewDecoder(req.Body).Decode(&b)
 
@@ -64,4 +75,15 @@ func doPostSession(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 	}
 
 	_, _ = rw.Write([]byte("{\"authentication_token\":\"" + SonnenBatterieMockAuthToken + "\"}"))
+}
+
+func doGetLatestData(t *testing.T, rw http.ResponseWriter, req *http.Request) {
+	if req.Method != "GET" {
+		_ = fmt.Sprintf("%s /api/session, want: GET", req.Method)
+		t.FailNow()
+	}
+
+	dat, _ := ioutil.ReadFile("test_response_get_latest.json")
+	rw.WriteHeader(http.StatusOK)
+	_, _ = rw.Write(dat)
 }
