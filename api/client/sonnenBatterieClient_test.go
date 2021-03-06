@@ -1,6 +1,7 @@
 package client
 
 import (
+	"encoding/json"
 	"sonnen-batterie-api/api/test"
 	"strings"
 	"testing"
@@ -44,4 +45,25 @@ func TestGetStatus(t *testing.T) {
 	test.Equals(t, int64(-35), data.GridFeedInInWatt, "GetStatus().GridFeedInInWatt")
 	test.Equals(t, false, data.Charging, "GetStatus().Charging")
 	test.Equals(t, true, data.Discharging, "GetStatus().Discharging")
+}
+
+//goland:noinspection GoNilness
+func TestGetSystem(t *testing.T) {
+	server := startSonnenBatterieServer(t)
+	defer server.Close()
+	ip := strings.Trim(server.URL, "http://")
+
+	client := NewClient(ip, "User", SonnenBatterieMockPassword)
+	data, err := client.GetSystem()
+
+	if err != nil {
+		t.Errorf("GetSystem(%s) returns error", ip)
+	}
+
+	test.Equals(t, "10.0.0.100", data.BatterySystem.Network.LanIP, "GetSystem().BatterySystem.Network.LanIP")
+	test.Equals(t, "31.31.31.31", data.BatterySystem.Network.WanIP, "GetSystem().BatterySystem.Network.WanIP")
+	test.Equals(t, "41.41.41.41", data.BatterySystem.Network.VpnIP, "GetSystem().BatterySystem.Network.VpnIP")
+	test.Equals(t, "1.5.5.781986", data.BatterySystem.Software.FirmwareVersion, "GetSystem().BatterySystem.Software.FirmwareVersion")
+	test.Equals(t, "power unit sB10s sI1 9010 IP30", data.BatterySystem.BatterySystemSystem.ModelName, "GetSystem().BatterySystem.BatterySystemSystem.ModelName")
+	test.Equals(t, json.Number("10.0"), data.BatterySystem.BatterySystemSystem.HardwareVersion, "GetSystem().BatterySystem.BatterySystemSystem.HardwareVersion")
 }

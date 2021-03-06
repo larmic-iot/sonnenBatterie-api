@@ -37,6 +37,11 @@ func startSonnenBatterieServer(t *testing.T) *httptest.Server {
 			doGetStatus(t, rw, req)
 
 			break
+
+		case "/api/battery_system":
+			doGetSystem(t, rw, req)
+
+			break
 		default:
 			_ = fmt.Sprintf("URL %s not known on test server", req.URL.String())
 			t.FailNow()
@@ -100,6 +105,17 @@ func doGetStatus(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 	}
 
 	dat, _ := ioutil.ReadFile("test_response_get_status.json")
+	rw.WriteHeader(http.StatusOK)
+	_, _ = rw.Write(dat)
+}
+
+func doGetSystem(t *testing.T, rw http.ResponseWriter, req *http.Request) {
+	if req.Method != "GET" {
+		_ = fmt.Sprintf("%s /api/battery_system, want: GET", req.Method)
+		t.FailNow()
+	}
+
+	dat, _ := ioutil.ReadFile("test_response_get_battery_system.json")
 	rw.WriteHeader(http.StatusOK)
 	_, _ = rw.Write(dat)
 }
