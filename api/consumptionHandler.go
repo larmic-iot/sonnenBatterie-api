@@ -8,7 +8,7 @@ import (
 	"sonnen-batterie-api/api/model"
 )
 
-func ConsumptionHandler(env env.Environment, w http.ResponseWriter, r *http.Request) {
+func ConsumptionHandler(env env.Environment, w http.ResponseWriter, _ *http.Request) {
 	client := sonnenBatterieClient.NewClient(env.Ip, env.UserName, env.UserPassword)
 	latestData, err := client.GetLatestData()
 

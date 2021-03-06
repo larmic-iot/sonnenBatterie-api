@@ -39,4 +39,10 @@ var routes = Routes{
 		Pattern:     "/api/consumption",
 		HandlerFunc: ConsumptionHandler,
 	},
+	Route{
+		Name:        "System",
+		Method:      "GET",
+		Pattern:     "/api/system",
+		HandlerFunc: SystemHandler,
+	},
 }

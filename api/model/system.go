@@ -1,21 +1,20 @@
 package model
 
-type Switch string
+type Led string
 
 const (
-	On  Switch = "on"
-	Off        = "off"
+	White  Led = "white"
+	Green      = "green"
+	Orange     = "orange"
+	Red        = "red"
 )
 
 type System struct {
 	Ip              string `json:"ip"`
-	Port            int    `json:"port"`
-	Name            string `json:"name"`
-	Icon            string `json:"icon"`
+	WanIp           string `json:"wanIp"`
 	Model           string `json:"model"`
 	MacAddress      string `json:"mac"`
 	SoftwareVersion string `json:"softwareVersion"`
 	HardwareVersion string `json:"hardwareVersion"`
-	Led             Switch `json:"led"`
-	Power           Switch `json:"power"`
+	Led             Led    `json:"led"`
 }
