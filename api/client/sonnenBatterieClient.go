@@ -7,9 +7,8 @@ import (
 )
 
 type Client struct {
-	Ip       string
-	user     string
-	password string
+	Ip    string
+	token string
 }
 
 type EclipseLed struct {
@@ -63,68 +62,44 @@ type System struct {
 }
 
 func NewClient(ip string, user string, password string) *Client {
+	client := NewAuthClient(ip, user, password)
+	token := client.GetAuthToken()
+
 	return &Client{
-		Ip:       ip,
-		user:     user,
-		password: password,
+		Ip:    ip,
+		token: token,
 	}
 }
 
 func (c *Client) GetLatestData() (LatestData, error) {
-	client := NewAuthClient(c.Ip, c.user, c.password)
-	token := client.GetAuthToken()
-
-	url := "http://" + c.Ip + "/api/v2/latestdata"
-
-	response := getRequest(url, token)
-
 	var latestData LatestData
 
-	err := json.Unmarshal([]byte(response), &latestData)
+	err := c.getRequest("/api/v2/latestdata", &latestData)
 
-	if err != nil {
-		return LatestData{}, err
-	}
-
-	return latestData, nil
+	return latestData, err
 }
 
 func (c *Client) GetStatus() (Status, error) {
-	client := NewAuthClient(c.Ip, c.user, c.password)
-	token := client.GetAuthToken()
-
-	url := "http://" + c.Ip + "/api/v2/status"
-
-	response := getRequest(url, token)
-
 	var status Status
 
-	err := json.Unmarshal([]byte(response), &status)
+	err := c.getRequest("/api/v2/status", &status)
 
-	if err != nil {
-		return Status{}, err
-	}
-
-	return status, nil
+	return status, err
 }
 
 func (c *Client) GetSystem() (System, error) {
-	client := NewAuthClient(c.Ip, c.user, c.password)
-	token := client.GetAuthToken()
-
-	url := "http://" + c.Ip + "/api/battery_system"
-
-	response := getRequest(url, token)
-
 	var system System
 
-	err := json.Unmarshal([]byte(response), &system)
+	err := c.getRequest("/api/battery_system", &system)
 
-	if err != nil {
-		return System{}, err
-	}
+	return system, err
+}
 
-	return system, nil
+func (c *Client) getRequest(urlContextPath string, dto interface{}) error {
+	url := "http://" + c.Ip + urlContextPath
+	response := getRequest(url, c.token)
+
+	return json.Unmarshal([]byte(response), &dto)
 }
 
 func getRequest(url, token string) string {
