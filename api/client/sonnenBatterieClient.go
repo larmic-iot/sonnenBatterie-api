@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"sonnen-batterie-api/api/client/model"
@@ -49,6 +50,8 @@ func (c *Client) GetSystem() (model.SystemDto, error) {
 func (c *Client) getRequest(urlContextPath string, dto interface{}) error {
 	url := "http://" + c.Ip + urlContextPath
 	response := getRequest(url, c.token)
+
+	fmt.Printf("GET %s, Body: %s\n", url, response)
 
 	return json.Unmarshal([]byte(response), &dto)
 }
