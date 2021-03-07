@@ -41,7 +41,7 @@ func TestGetStatus(t *testing.T) {
 		t.Errorf("GetStatus(%s) returns error", ip)
 	}
 
-	test.Equals(t, int64(84), data.ChargeLevel, "GetStatus().ChargeLevel")
+	test.Equals(t, int64(82), data.ChargeLevel, "GetStatus().ChargeLevel")
 	test.Equals(t, int64(-35), data.GridFeedInInWatt, "GetStatus().GridFeedInInWatt")
 	test.Equals(t, false, data.Charging, "GetStatus().Charging")
 	test.Equals(t, true, data.Discharging, "GetStatus().Discharging")

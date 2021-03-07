@@ -43,7 +43,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProtocolError"
-  /api/generation:
+  /api/status:
     get:
       summary: Returns SonnenBatterie generation info.
       responses:

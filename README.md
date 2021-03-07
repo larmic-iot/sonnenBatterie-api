@@ -6,10 +6,12 @@
 [![Docker hub image](https://img.shields.io/docker/image-size/larmic/sonnen-batterie-api?label=dockerhub)](https://hub.docker.com/repository/docker/larmic/sonnen-batterie-api)
 ![Docker Image Version (latest by date)](https://img.shields.io/docker/v/larmic/sonnen-batterie-api)
 
-TODO: 
-* implement this tool
-* write some intro
-* battery charge status?
+A REST api client (adapter) for the [SonnenBatterie](https://sonnen.de/stromspeicher/sonnenbatterie-10/). The default
+Sonnen-API (with token) provides too little information. This application does not need the token, but use the normal
+access to the SonnenBatterie. REST endpoints documented in [open api 3.1](open-api-3.yaml).
+
+This project inspired by [tp-link-hs110-api written in go](https://github.com/larmic/tp-link-hs110-api) and
+improves my Go knowledge.
 
 ## Versioning
 
@@ -25,22 +27,26 @@ The easiest way is to use the docker image. Otherwise, the artifact will have to
 
 ```sh 
 $ docker pull larmic/sonnenBatterie-api
-$ docker run -d -p 8080:8080 --rm --name larmic-sonnenBatterie-api larmic/sonnenBatterie-api
+$ docker run -d -p 8080:8080 --rm \
+ -e SONNENBATTERIE_IP='<my-battery-ip>' \
+ -e SONNENBATTERIE_USER_NAME='User' \
+ -e SONNENBATTERIE_USER_PASSWORD='<my-password>' \
+ --name larmic-sonnen-batterie-api larmic/sonnen-batterie-api
 ```
 
 ## Example requests
 
 ```sh 
-$ curl http://localhost:8080                        # Open Api 3.1 specification
-$ curl http://localhost:8080/10.0.0.1               # General energy plug information
-$ curl http://localhost:8080/10.0.0.1/consumption   # Energy consumption
+$ curl http://localhost:8080                    # Open Api 3.1 specification
+$ curl http://localhost:8080/api/consumption    # Energy consumption
+$ curl http://localhost:8080/api/status         # Battery status (incl. greed feed in, production and charge level)
 ```
 
 ## Build application by yourself
 
 ### Requirements
 
-* Docker 
+* Docker
 * Go 1.15.x (if you want to build it without using docker builder)
 
 ### Build it
@@ -50,20 +56,4 @@ $ make docker-build                             # build local docker image
 $ make docker-push                              # push local docker image to hub.docker.com
 $ make docker-all                               # build and push docker image to hub.docker.com
 $ make IMAGE_TAG="0.0.1" docker-all             # build and push docker image with specific version
-```
-
-### Run it native
-
-```sh 
-$ make run                                      # start native app 
-$ curl http://localhost:8080/api/10.0.0.210     # call rest service
-$ ctrl+c                                        # stop native app
-```
-
-### Run it using docker
-
-```sh 
-$ make docker-run                               # start docker image 
-$ curl http://localhost:8080/api/10.0.0.210     # call rest service
-$ make docker-stop                              # stop and remove docker app
 ```
