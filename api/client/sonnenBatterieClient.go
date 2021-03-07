@@ -51,6 +51,7 @@ func (c *Client) getRequest(urlContextPath string, dto interface{}) error {
 	url := "http://" + c.Ip + urlContextPath
 	response := getRequest(url, c.token)
 
+	fmt.Println("token " + c.token)
 	fmt.Printf("GET %s, Body: %s\n", url, response)
 
 	return json.Unmarshal([]byte(response), &dto)
