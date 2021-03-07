@@ -13,10 +13,7 @@ type Client struct {
 	token string
 }
 
-func NewClient(ip string, user string, password string) *Client {
-	client := NewAuthClient(ip, user, password)
-	token := client.GetAuthToken()
-
+func NewClient(ip string, token string) *Client {
 	return &Client{
 		Ip:    ip,
 		token: token,
@@ -49,19 +46,32 @@ func (c *Client) GetSystem() (model.SystemDto, error) {
 
 func (c *Client) getRequest(urlContextPath string, dto interface{}) error {
 	url := "http://" + c.Ip + urlContextPath
-	response := getRequest(url, c.token)
+	response, err := getRequest(url, c.token)
+
+	if err != nil {
+		return err
+	}
 
 	fmt.Printf("GET %s\n -> token %s\n -> Body: %s\n", url, c.token, response)
 
 	return json.Unmarshal([]byte(response), &dto)
 }
 
-func getRequest(url, token string) string {
+func getRequest(url, token string) (string, error) {
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("Auth-Token", token)
 	client := &http.Client{}
-	// TODO return err
-	resp, _ := client.Do(req)
-	body, _ := ioutil.ReadAll(resp.Body)
-	return string(body)
+	resp, err := client.Do(req)
+
+	if err != nil {
+		return "", err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(body), nil
 }

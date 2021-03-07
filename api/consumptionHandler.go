@@ -9,7 +9,10 @@ import (
 )
 
 func ConsumptionHandler(env env.Environment, w http.ResponseWriter, _ *http.Request) {
-	client := sonnenBatterieClient.NewClient(env.Ip, env.UserName, env.UserPassword)
+	authClient := sonnenBatterieClient.NewAuthClient(env.Ip, env.UserName, env.UserPassword)
+	token := authClient.GetAuthToken()
+
+	client := sonnenBatterieClient.NewClient(env.Ip, token)
 	latestData, err := client.GetLatestData()
 
 	if err != nil {

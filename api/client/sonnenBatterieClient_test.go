@@ -13,7 +13,7 @@ func TestGetLatestData(t *testing.T) {
 	defer server.Close()
 	ip := strings.Trim(server.URL, "http://")
 
-	client := NewClient(ip, "User", SonnenBatterieMockPassword)
+	client := NewClient(ip, SonnenBatterieMockAuthToken)
 	data, err := client.GetLatestData()
 
 	if err != nil {
@@ -34,7 +34,7 @@ func TestGetStatus(t *testing.T) {
 	defer server.Close()
 	ip := strings.Trim(server.URL, "http://")
 
-	client := NewClient(ip, "User", SonnenBatterieMockPassword)
+	client := NewClient(ip, SonnenBatterieMockAuthToken)
 	data, err := client.GetStatus()
 
 	if err != nil {
@@ -53,7 +53,7 @@ func TestGetSystem(t *testing.T) {
 	defer server.Close()
 	ip := strings.Trim(server.URL, "http://")
 
-	client := NewClient(ip, "User", SonnenBatterieMockPassword)
+	client := NewClient(ip, SonnenBatterieMockAuthToken)
 	data, err := client.GetSystem()
 
 	if err != nil {

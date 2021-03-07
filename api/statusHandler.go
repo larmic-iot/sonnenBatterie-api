@@ -10,7 +10,10 @@ import (
 )
 
 func StatusHandler(env env.Environment, w http.ResponseWriter, _ *http.Request) {
-	client := sonnenBatterieClient.NewClient(env.Ip, env.UserName, env.UserPassword)
+	authClient := sonnenBatterieClient.NewAuthClient(env.Ip, env.UserName, env.UserPassword)
+	token := authClient.GetAuthToken()
+
+	client := sonnenBatterieClient.NewClient(env.Ip, token)
 	statusDto, err := client.GetStatus()
 	latestDataDto, err2 := client.GetLatestData()
 
