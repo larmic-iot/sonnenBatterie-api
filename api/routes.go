@@ -45,4 +45,10 @@ var routes = Routes{
 		Pattern:     "/api/system",
 		HandlerFunc: SystemHandler,
 	},
+	Route{
+		Name:        "Status",
+		Method:      "GET",
+		Pattern:     "/api/status",
+		HandlerFunc: StatusHandler,
+	},
 }

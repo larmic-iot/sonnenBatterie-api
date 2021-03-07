@@ -112,10 +112,12 @@ components:
           type: integer
           description: Actual house consumption in milli watt
 
-    Generation:
+    Status:
       required:
         - grid_feed_in_mw
         - production_mw
+        - charge_level
+        - charge_mode
       properties:
         grid_feed_in_mw:
           type: integer
@@ -123,6 +125,16 @@ components:
         production_mw:
           type: integer
           description: Actual solar production in milli watt
+        charge_level:
+          type: integer
+          description: Actual battery charge level in percent
+        charge_mode:
+          type: string
+          description: SonnenBatterie charge mode.
+          enum:
+            - charging
+            - discharging
+            - idle
 
     ProtocolError:
       required:
