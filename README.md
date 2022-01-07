@@ -36,10 +36,12 @@ $ docker run -d -p 8080:8080 --rm \
 
 ## Example requests
 
+See [open api 3 specification](open-api-3.yaml) for further information.
+
 ```sh 
-$ curl http://localhost:8080                    # Open Api 3.1 specification
-$ curl http://localhost:8080/api/consumption    # Energy consumption
-$ curl http://localhost:8080/api/status         # Battery status (incl. greed feed in, production and charge level)
+$ curl http://localhost:8080/sonnen-api                    # Open Api 3.1 specification
+$ curl http://localhost:8080/sonnen-api/api/consumption    # Energy consumption
+$ curl http://localhost:8080/sonnen-api/api/status         # Battery status (incl. greed feed in, production and charge level)
 ```
 
 ## Build application by yourself
@@ -47,7 +49,7 @@ $ curl http://localhost:8080/api/status         # Battery status (incl. greed fe
 ### Requirements
 
 * Docker
-* Go 1.15.x (if you want to build it without using docker builder)
+* Go 1.17.x (if you want to build it without using docker builder)
 
 ### Build it
 
