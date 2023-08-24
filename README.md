@@ -26,7 +26,7 @@ improves my Go knowledge.
 The easiest way is to use the docker image. Otherwise, the artifact will have to be built by yourself.
 
 ```sh 
-$ docker pull larmic/sonnenBatterie-api
+$ docker pull larmic/sonnen-batterie-api
 $ docker run -d -p 8080:8080 --rm \
  -e SONNENBATTERIE_IP='<my-battery-ip>' \
  -e SONNENBATTERIE_USER_NAME='User' \
