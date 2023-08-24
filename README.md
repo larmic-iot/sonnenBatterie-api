@@ -49,13 +49,12 @@ $ curl http://localhost:8080/sonnen-api/api/status         # Battery status (inc
 ### Requirements
 
 * Docker
-* Go 1.17.x (if you want to build it without using docker builder)
+* Go 1.21.x (if you want to build it without using docker builder)
 
-### Build it
+### Build and run it
+
+See [Makefile](Makefile)!
 
 ```sh 
-$ make docker-build                             # build local docker image
-$ make docker-push                              # push local docker image to hub.docker.com
-$ make docker-all                               # build and push docker image to hub.docker.com
-$ make IMAGE_TAG="0.0.1" docker-all             # build and push docker image with specific version
+$ make              # prints available make goals
 ```
