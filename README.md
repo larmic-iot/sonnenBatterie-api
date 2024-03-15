@@ -7,8 +7,8 @@
 ![Docker Image Version (latest by date)](https://img.shields.io/docker/v/larmic/sonnen-batterie-api)
 
 A REST api client (adapter) for the [SonnenBatterie](https://sonnen.de/stromspeicher/sonnenbatterie-10/). The default
-Sonnen-API (with token) provides too little information. This application does not need the token, but use the normal
-access to the SonnenBatterie. REST endpoints documented in [open api 3.1](open-api-3.yaml).
+Sonnen-Battery-API (with token) provides too little information. This application does not need the token, but use the 
+normal access to the SonnenBatterie. REST endpoints documented in [open api 3.1](open-api-3.yaml).
 
 This project inspired by [tp-link-hs110-api written in go](https://github.com/larmic/tp-link-hs110-api) and
 improves my Go knowledge.
@@ -39,9 +39,9 @@ $ docker run -d -p 8080:8080 --rm \
 See [open api 3 specification](open-api-3.yaml) for further information.
 
 ```sh 
-$ curl http://localhost:8080/sonnen-api                    # Open Api 3.1 specification
-$ curl http://localhost:8080/sonnen-api/api/consumption    # Energy consumption
-$ curl http://localhost:8080/sonnen-api/api/status         # Battery status (incl. greed feed in, production and charge level)
+$ curl http://localhost:8080/sonnen-battery-api                    # Open Api 3.1 specification
+$ curl http://localhost:8080/sonnen-battery-api/api/consumption    # Energy consumption
+$ curl http://localhost:8080/sonnen-battery-api/api/status         # Battery status (incl. greed feed in, production and charge level)
 ```
 
 ## Build application by yourself

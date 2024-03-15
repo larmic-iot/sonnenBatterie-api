@@ -24,31 +24,31 @@ var routes = Routes{
 	Route{
 		Name:        "Open Api documentation (yaml)",
 		Method:      "GET",
-		Pattern:     "/sonnen-api/",
+		Pattern:     "/sonnen-battery-api/",
 		HandlerFunc: OpenApiDocumentation,
 	},
 	Route{
 		Name:        "Open Api documentation (yaml)",
 		Method:      "GET",
-		Pattern:     "/sonnen-api/api",
+		Pattern:     "/sonnen-battery-api/api",
 		HandlerFunc: OpenApiDocumentation,
 	},
 	Route{
 		Name:        "Consumption",
 		Method:      "GET",
-		Pattern:     "/sonnen-api/api/consumption",
+		Pattern:     "/sonnen-battery-api/api/consumption",
 		HandlerFunc: ConsumptionHandler,
 	},
 	Route{
 		Name:        "System",
 		Method:      "GET",
-		Pattern:     "/sonnen-api/api/system",
+		Pattern:     "/sonnen-battery-api/api/system",
 		HandlerFunc: SystemHandler,
 	},
 	Route{
 		Name:        "Status",
 		Method:      "GET",
-		Pattern:     "/sonnen-api/api/status",
+		Pattern:     "/sonnen-battery-api/api/status",
 		HandlerFunc: StatusHandler,
 	},
 }
