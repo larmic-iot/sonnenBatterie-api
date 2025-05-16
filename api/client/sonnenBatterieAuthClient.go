@@ -1,17 +1,13 @@
 package client
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
+	"net/url"
 	"sonnen-batterie-api/api/client/crypto"
-)
-
-const (
-	JsonContentType = "application/json"
+	"strings"
 )
 
 type AuthClient struct {
@@ -22,12 +18,6 @@ type AuthClient struct {
 
 type Token struct {
 	Token string `json:"authentication_token"`
-}
-
-type body struct {
-	User      string `json:"User"`
-	Challenge string `json:"challenge"`
-	Response  string `json:"response"`
 }
 
 func NewAuthClient(ip, user, password string) *AuthClient {
@@ -46,15 +36,25 @@ func (c *AuthClient) GetAuthToken() string {
 
 	body := c.buildSessionBody(challenge, encryptedPassword)
 	fmt.Println("POST session, Body: ", body)
-	post, _ := http.Post(baseUrl+"session", JsonContentType, body)
+	req, _ := http.NewRequest("POST", baseUrl+"session", body)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+	req.Header.Set("Accept", "application/json, text/javascript, */*; q=0.01")
+	req.Header.Set("X-Requested-With", "XMLHttpRequest")
+
+	client := &http.Client{}
+	post, _ := client.Do(req)
 	defer post.Body.Close()
 
 	return unmarshalToken(post.Body).Token
 }
 
 func (c *AuthClient) buildSessionBody(challenge string, encryptedPassword string) io.Reader {
-	body := `{"user":"` + c.User + `","challenge":"` + challenge + `","response":"` + encryptedPassword + `"}`
-	return bytes.NewBuffer([]byte(body))
+	values := url.Values{}
+	values.Set("user", c.User)
+	values.Set("challenge", challenge)
+	values.Set("response", encryptedPassword)
+
+	return strings.NewReader(values.Encode())
 }
 
 func (c *AuthClient) buildChallengeUrl() string {
@@ -62,7 +62,14 @@ func (c *AuthClient) buildChallengeUrl() string {
 }
 
 func unmarshalToken(body io.ReadCloser) Token {
-	token, _ := ioutil.ReadAll(body)
+	token, err := io.ReadAll(body)
+	if err != nil {
+		fmt.Println("Error while reading token:", err)
+		return Token{}
+	}
+
+	fmt.Println("Response from challenge:", string(token))
+
 	var t Token
 	_ = json.Unmarshal(token, &t)
 	return t
