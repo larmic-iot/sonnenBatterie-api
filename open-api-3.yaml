@@ -59,7 +59,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProtocolError"
-
+  /metrics:
+    get:
+      summary: Get Prometheus metrics
+      description: Exposes Prometheus metrics for monitoring the application
+      responses:
+        '200':
+          description: Prometheus metrics in text format
+          content:
+            text/plain:
+              schema:
+                type: string
 
 components:
   schemas:
