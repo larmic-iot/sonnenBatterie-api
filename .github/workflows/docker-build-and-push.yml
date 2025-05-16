@@ -25,6 +25,9 @@ jobs:
       - name: Set up version
         run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
+      - name: Set up Docker-compatible version
+        run: echo "DOCKER_VERSION=$(cat VERSION | sed 's/+/-/g')" >> $GITHUB_ENV
+
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
@@ -42,4 +45,4 @@ jobs:
 
       - name: build image
         run: |
-          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm --build-arg VERSION=$VERSION --pull --tag "$IMAGE_NAME:$VERSION" --tag "$IMAGE_NAME:latest" . --push
+          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm --build-arg VERSION=$VERSION --pull --tag "$IMAGE_NAME:$DOCKER_VERSION" --tag "$IMAGE_NAME:latest" . --push
