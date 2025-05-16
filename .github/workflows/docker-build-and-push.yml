@@ -38,5 +38,4 @@ jobs:
 
       - name: build image
         run: |
-          update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
           docker buildx build --platform=linux/amd64,linux/arm64,linux/arm --build-arg VERSION=$VERSION --pull --tag "$IMAGE_NAME:$VERSION" --tag "$IMAGE_NAME:latest" . --push
