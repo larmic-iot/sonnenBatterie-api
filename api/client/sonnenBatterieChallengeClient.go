@@ -2,22 +2,24 @@ package client
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 )
 
 func GetChallenge(ip string) (string, error) {
 	resp, err := http.Get(buildChallengeUrl(ip))
-
 	if err != nil {
-		fmt.Println("Could not acquire authentication challenge from sonnenBatterie", err)
-		return "", err
+		return "", fmt.Errorf("could not acquire authentication challenge from sonnenBatterie: %w", err)
 	}
 
 	defer resp.Body.Close()
 
-	challengeBody, _ := ioutil.ReadAll(resp.Body)
+	challengeBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("error reading challenge response: %w", err)
+	}
+
 	return trimChallenge(challengeBody), nil
 }
 

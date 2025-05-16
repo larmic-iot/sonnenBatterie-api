@@ -1,14 +1,19 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"sonnen-batterie-api/api/client/crypto"
 	"testing"
 )
+
+type body struct {
+	User      string `json:"user"`
+	Challenge string `json:"challenge"`
+	Response  string `json:"response"`
+}
 
 const (
 	SonnenBatterieMockChallenge = "test-challenge"
@@ -43,8 +48,7 @@ func startSonnenBatterieServer(t *testing.T) *httptest.Server {
 
 			break
 		default:
-			_ = fmt.Sprintf("URL %s not known on test server", req.URL.String())
-			t.FailNow()
+			t.Fatalf("URL %s not known on test server", req.URL.String())
 		}
 	}))
 
@@ -64,58 +68,82 @@ func doPostSession(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 	encryptedPassword := crypto.Encrypt(SonnenBatterieMockPassword, SonnenBatterieMockChallenge)
 
 	if req.Method != "POST" {
-		_ = fmt.Sprintf("%s /api/session, want: POST", req.Method)
-		t.FailNow()
+		t.Fatalf("%s /api/session, want: POST", req.Method)
 	}
 
-	var b body
-	_ = json.NewDecoder(req.Body).Decode(&b)
-
-	if b.User != "User" {
-		_ = fmt.Sprintf("POST /api/session body user: = %s, want: User", b.User)
-		t.FailNow()
-	}
-	if b.Challenge != SonnenBatterieMockChallenge {
-		_ = fmt.Sprintf("POST /api/session body challenge: = %s, want: "+SonnenBatterieMockChallenge+"", b.Challenge)
-		t.FailNow()
-	}
-	if b.Response != encryptedPassword {
-		_ = fmt.Sprintf("POST /api/session body response: = %s, want: "+encryptedPassword+"", b.Response)
-		t.FailNow()
+	err := req.ParseForm()
+	if err != nil {
+		t.Fatalf("Failed to parse form: %v", err)
 	}
 
-	_, _ = rw.Write([]byte("{\"authentication_token\":\"" + SonnenBatterieMockAuthToken + "\"}"))
+	user := req.Form.Get("user")
+	challenge := req.Form.Get("challenge")
+	response := req.Form.Get("response")
+
+	if user != "User" {
+		t.Fatalf("POST /api/session form user: = %s, want: User", user)
+	}
+	if challenge != SonnenBatterieMockChallenge {
+		t.Fatalf("POST /api/session form challenge: = %s, want: %s", challenge, SonnenBatterieMockChallenge)
+	}
+	if response != encryptedPassword {
+		t.Fatalf("POST /api/session form response: = %s, want: %s", response, encryptedPassword)
+	}
+
+	rw.Header().Set("Content-Type", "application/json")
+	_, err = rw.Write([]byte("{\"authentication_token\":\"" + SonnenBatterieMockAuthToken + "\"}"))
+	if err != nil {
+		t.Fatalf("Failed to write response: %v", err)
+	}
 }
 
 func doGetLatestData(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 	if req.Method != "GET" {
-		_ = fmt.Sprintf("%s /api/v2/latestdata, want: GET", req.Method)
-		t.FailNow()
+		t.Fatalf("%s /api/v2/latestdata, want: GET", req.Method)
 	}
 
-	dat, _ := ioutil.ReadFile("test_response_get_latest_data.json")
+	dat, err := os.ReadFile("test_response_get_latest_data.json")
+	if err != nil {
+		t.Fatalf("Failed to read test_response_get_latest_data.json: %v", err)
+	}
+
 	rw.WriteHeader(http.StatusOK)
-	_, _ = rw.Write(dat)
+	_, err = rw.Write(dat)
+	if err != nil {
+		t.Fatalf("Failed to write response: %v", err)
+	}
 }
 
 func doGetStatus(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 	if req.Method != "GET" {
-		_ = fmt.Sprintf("%s /api/v2/status, want: GET", req.Method)
-		t.FailNow()
+		t.Fatalf("%s /api/v2/status, want: GET", req.Method)
 	}
 
-	dat, _ := ioutil.ReadFile("test_response_get_status.json")
+	dat, err := os.ReadFile("test_response_get_status.json")
+	if err != nil {
+		t.Fatalf("Failed to read test_response_get_status.json: %v", err)
+	}
+
 	rw.WriteHeader(http.StatusOK)
-	_, _ = rw.Write(dat)
+	_, err = rw.Write(dat)
+	if err != nil {
+		t.Fatalf("Failed to write response: %v", err)
+	}
 }
 
 func doGetSystem(t *testing.T, rw http.ResponseWriter, req *http.Request) {
 	if req.Method != "GET" {
-		_ = fmt.Sprintf("%s /api/battery_system, want: GET", req.Method)
-		t.FailNow()
+		t.Fatalf("%s /api/battery_system, want: GET", req.Method)
 	}
 
-	dat, _ := ioutil.ReadFile("test_response_get_battery_system.json")
+	dat, err := os.ReadFile("test_response_get_battery_system.json")
+	if err != nil {
+		t.Fatalf("Failed to read test_response_get_battery_system.json: %v", err)
+	}
+
 	rw.WriteHeader(http.StatusOK)
-	_, _ = rw.Write(dat)
+	_, err = rw.Write(dat)
+	if err != nil {
+		t.Fatalf("Failed to write response: %v", err)
+	}
 }

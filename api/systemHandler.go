@@ -11,7 +11,20 @@ import (
 
 func SystemHandler(env env.Environment, w http.ResponseWriter, _ *http.Request) {
 	authClient := sonnenBatterieClient.NewAuthClient(env.Ip, env.UserName, env.UserPassword)
-	token := authClient.GetAuthToken()
+	token, err := authClient.GetAuthToken()
+	if err != nil {
+		w.Header().Add("Content-Type", "text/plain; charset=UTF-8")
+		w.WriteHeader(http.StatusNotFound)
+
+		_ = json.
+			NewEncoder(w).
+			Encode(
+				model.ProtocolError{
+					Code:    http.StatusNotFound,
+					Message: env.Ip + " not found!",
+				})
+		return
+	}
 
 	client := sonnenBatterieClient.NewClient(env.Ip, token)
 	systemDto, err := client.GetSystem()

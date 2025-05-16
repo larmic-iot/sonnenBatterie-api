@@ -23,15 +23,22 @@ func TestGetChallenge(t *testing.T) {
 		want want
 	}{
 		{"GetChallenge('" + ip + "')", args{ip: ip}, want{challenge: "test-challenge", err: nil}},
-		{"GetChallenge('127.0.0.1')", args{ip: "127.0.0.1"}, want{challenge: "", err: errors.New("Get \"http://127.0.0.1/api/challenge\": dial tcp 127.0.0.1:80: connect: connection refused")}},
+		{"GetChallenge('127.0.0.1')", args{ip: "127.0.0.1"}, want{challenge: "", err: errors.New("could not acquire authentication challenge from sonnenBatterie: Get \"http://127.0.0.1/api/challenge\": dial tcp 127.0.0.1:80: connect: connection refused")}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got, _ := GetChallenge(tt.args.ip); got != tt.want.challenge {
-				t.Errorf("GetChallenge(%s) = %v, want %v", tt.args.ip, got, tt.want.challenge)
+			got, err := GetChallenge(tt.args.ip)
+
+			// Check challenge value
+			if got != tt.want.challenge {
+				t.Errorf("GetChallenge(%s) challenge = %v, want %v", tt.args.ip, got, tt.want.challenge)
 			}
-			if _, err := GetChallenge(tt.args.ip); err != nil && err.Error() != tt.want.err.Error() {
-				t.Errorf("GetChallenge("+tt.args.ip+") = %v, want %v", err.Error(), tt.want.err.Error())
+
+			// Check error
+			if (err == nil && tt.want.err != nil) || (err != nil && tt.want.err == nil) {
+				t.Errorf("GetChallenge(%s) error = %v, want %v", tt.args.ip, err, tt.want.err)
+			} else if err != nil && tt.want.err != nil && err.Error() != tt.want.err.Error() {
+				t.Errorf("GetChallenge(%s) error = %v, want %v", tt.args.ip, err.Error(), tt.want.err.Error())
 			}
 		})
 	}

@@ -28,24 +28,41 @@ func NewAuthClient(ip, user, password string) *AuthClient {
 	}
 }
 
-func (c *AuthClient) GetAuthToken() string {
+func (c *AuthClient) GetAuthToken() (string, error) {
 	baseUrl := "http://" + c.Ip + "/api/"
 
-	challenge, _ := GetChallenge(c.Ip)
+	challenge, err := GetChallenge(c.Ip)
+	if err != nil {
+		return "", fmt.Errorf("failed to get challenge: %w", err)
+	}
+
 	encryptedPassword := crypto.Encrypt(c.password, challenge)
 
 	body := c.buildSessionBody(challenge, encryptedPassword)
 	fmt.Println("POST session, Body: ", body)
-	req, _ := http.NewRequest("POST", baseUrl+"session", body)
+
+	req, err := http.NewRequest("POST", baseUrl+"session", body)
+	if err != nil {
+		return "", fmt.Errorf("failed to create request: %w", err)
+	}
+
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 	req.Header.Set("Accept", "application/json, text/javascript, */*; q=0.01")
 	req.Header.Set("X-Requested-With", "XMLHttpRequest")
 
 	client := &http.Client{}
-	post, _ := client.Do(req)
+	post, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("failed to execute request: %w", err)
+	}
 	defer post.Body.Close()
 
-	return unmarshalToken(post.Body).Token
+	token, err := unmarshalToken(post.Body)
+	if err != nil {
+		return "", fmt.Errorf("failed to unmarshal token: %w", err)
+	}
+
+	return token.Token, nil
 }
 
 func (c *AuthClient) buildSessionBody(challenge string, encryptedPassword string) io.Reader {
@@ -61,16 +78,19 @@ func (c *AuthClient) buildChallengeUrl() string {
 	return "http://" + c.Ip + "/api/challenge"
 }
 
-func unmarshalToken(body io.ReadCloser) Token {
+func unmarshalToken(body io.ReadCloser) (Token, error) {
 	token, err := io.ReadAll(body)
 	if err != nil {
-		fmt.Println("Error while reading token:", err)
-		return Token{}
+		return Token{}, fmt.Errorf("error while reading token: %w", err)
 	}
 
-	fmt.Println("Response from challenge:", string(token))
+	fmt.Println("Response from session:", string(token))
 
 	var t Token
-	_ = json.Unmarshal(token, &t)
-	return t
+	err = json.Unmarshal(token, &t)
+	if err != nil {
+		return Token{}, fmt.Errorf("error while unmarshaling token: %w", err)
+	}
+
+	return t, nil
 }
