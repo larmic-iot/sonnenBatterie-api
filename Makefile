@@ -8,6 +8,19 @@ SONNENBATTERIE_USER_PASSWORD=my-password
 help: ## Outputs this help screen
 	@grep -E '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
+## —— Go commands 🐹———————————————————————————————————————————————————————————————————————————————————————————
+go-run: ## Runs the application using Go
+	@echo "Running application with Go"
+	SONNENBATTERIE_IP='${SONNENBATTERIE_IP}' SONNENBATTERIE_USER_NAME='User' SONNENBATTERIE_USER_PASSWORD='${SONNENBATTERIE_USER_PASSWORD}' go run main.go
+
+go-build: ## Builds the application using Go
+	@echo "Building application with Go"
+	go build -o sonnen-batterie-api main.go
+
+go-test: ## Runs all tests using Go
+	@echo "Running tests with Go"
+	go test ./...
+
 ## —— Build 🏗️———————————————————————————————————————————————————————————————————————————————————————————————————
 docker-build: ## Builds docker image including automated tests
 	@echo "Remove docker image if already exists"
