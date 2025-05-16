@@ -8,18 +8,20 @@
 
 A REST api client (adapter) for the [SonnenBatterie](https://sonnen.de/stromspeicher/sonnenbatterie-10/). The default
 Sonnen-Battery-API (with token) provides too little information. This application does not need the token, but use the 
-normal access to the SonnenBatterie. REST endpoints documented in [open api 3.1](open-api-3.yaml).
+normal access to the SonnenBatterie. REST endpoints documented in [open api 3.0](open-api-3.yaml).
 
 This project inspired by [tp-link-hs110-api written in go](https://github.com/larmic/tp-link-hs110-api) and
 improves my Go knowledge.
 
 ## Versioning
 
-[Semantic Versioning 2.x](https://semver.org/) is used. Version number **MAJOR.MINOR.PATCH** with
+A modified version of [Semantic Versioning 2.x](https://semver.org/) is used. Version number **MAJOR.MINOR.PATCH+api-X.Y.Z** with
 
-* **MAJOR** version increase on incompatible API changes
-* **MINOR** version increase on adding new functionality in a backwards compatible manner
-* **PATCH** version increase on backwards compatible bug fixes or documentation
+* **MAJOR.MINOR.PATCH** follows semantic versioning:
+  * **MAJOR** version increase on incompatible API changes
+  * **MINOR** version increase on adding new functionality in a backwards compatible manner
+  * **PATCH** version increase on backwards compatible bug fixes or documentation
+* **+api-X.Y.Z** indicates the external software version of the SonnenBatterie API being used
 
 ## Usage
 
@@ -36,10 +38,10 @@ $ docker run -d -p 8080:8080 --rm \
 
 ## Example requests
 
-See [open api 3 specification](open-api-3.yaml) for further information.
+See [open api 3.0 specification](open-api-3.yaml) for further information.
 
 ```sh 
-$ curl http://localhost:8080/sonnen-battery-api                    # Open Api 3.1 specification
+$ curl http://localhost:8080/sonnen-battery-api                    # Open Api 3.0 specification
 $ curl http://localhost:8080/sonnen-battery-api/api/consumption    # Energy consumption
 $ curl http://localhost:8080/sonnen-battery-api/api/status         # Battery status (incl. greed feed in, production and charge level)
 ```
