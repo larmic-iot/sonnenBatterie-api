@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"sonnen-batterie-api/api/env"
 )
@@ -22,33 +23,35 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
-		Name:        "Open Api documentation (yaml)",
-		Method:      "GET",
-		Pattern:     "/sonnen-battery-api/",
-		HandlerFunc: OpenApiDocumentation,
+		Name:    "Metrics",
+		Method:  "GET",
+		Pattern: "/metrics",
+		HandlerFunc: func(e env.Environment, w http.ResponseWriter, r *http.Request) {
+			promhttp.Handler().ServeHTTP(w, r)
+		},
 	},
 	Route{
 		Name:        "Open Api documentation (yaml)",
 		Method:      "GET",
-		Pattern:     "/sonnen-battery-api/api",
+		Pattern:     "/api/",
 		HandlerFunc: OpenApiDocumentation,
 	},
 	Route{
 		Name:        "Consumption",
 		Method:      "GET",
-		Pattern:     "/sonnen-battery-api/api/consumption",
+		Pattern:     "/api/consumption",
 		HandlerFunc: ConsumptionHandler,
 	},
 	Route{
 		Name:        "System",
 		Method:      "GET",
-		Pattern:     "/sonnen-battery-api/api/system",
+		Pattern:     "/api/system",
 		HandlerFunc: SystemHandler,
 	},
 	Route{
 		Name:        "Status",
 		Method:      "GET",
-		Pattern:     "/sonnen-battery-api/api/status",
+		Pattern:     "/api/status",
 		HandlerFunc: StatusHandler,
 	},
 }

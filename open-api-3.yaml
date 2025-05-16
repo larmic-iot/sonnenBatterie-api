@@ -11,7 +11,7 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0
 
 paths:
-  /sonnen-battery-api/api/system:
+  /api/system:
     get:
       summary: Returns SonnenBatterie info.
       responses:
@@ -27,7 +27,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProtocolError"
-  /sonnen-battery-api/api/consumption:
+  /api/consumption:
     get:
       summary: Returns SonnenBatterie consumption info.
       responses:
@@ -43,7 +43,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProtocolError"
-  /sonnen-battery-api/api/status:
+  /api/status:
     get:
       summary: Returns SonnenBatterie status info.
       responses:

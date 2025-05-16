@@ -41,9 +41,9 @@ $ docker run -d -p 8080:8080 --rm \
 See [open api 3.0 specification](open-api-3.yaml) for further information.
 
 ```sh 
-$ curl http://localhost:8080/sonnen-battery-api                    # Open Api 3.0 specification
-$ curl http://localhost:8080/sonnen-battery-api/api/consumption    # Energy consumption
-$ curl http://localhost:8080/sonnen-battery-api/api/status         # Battery status (incl. greed feed in, production and charge level)
+$ curl http://localhost:8080/api                # Open Api 3.0 specification
+$ curl http://localhost:8080/api/consumption    # Energy consumption
+$ curl http://localhost:8080/api/status         # Battery status (incl. greed feed in, production and charge level)
 ```
 
 ## Build application by yourself
