@@ -3,7 +3,7 @@ module sonnen-batterie-api
 go 1.21
 
 require (
-	github.com/gorilla/handlers v1.5.1
+	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
 	golang.org/x/crypto v0.1.0
 )
